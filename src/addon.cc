@@ -8,7 +8,6 @@
 
 #include <nan.h>
 #include "sync.h"   // NOLINT(build/include)
-#include "async.h"  // NOLINT(build/include)
 
 using v8::FunctionTemplate;
 using v8::Object;
@@ -20,15 +19,6 @@ using Nan::Set;
 // Expose synchronous and asynchronous access to our
 // Estimate() function
 NAN_MODULE_INIT(InitAll) {
-  Set(target, New<String>("calculateSync").ToLocalChecked(),
-    GetFunction(New<FunctionTemplate>(CalculateSync)).ToLocalChecked());
-
-  Set(target, New<String>("calculateAsync").ToLocalChecked(),
-    GetFunction(New<FunctionTemplate>(CalculateAsync)).ToLocalChecked());
-
-  Set(target, New<String>("getMyNumber").ToLocalChecked(),
-    GetFunction(New<FunctionTemplate>(GetMyNumber)).ToLocalChecked());
-
   Set(target, New<String>("getWindowBitmap").ToLocalChecked(),
     GetFunction(New<FunctionTemplate>(GetWindowBitmap)).ToLocalChecked());
 }

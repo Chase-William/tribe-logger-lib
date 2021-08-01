@@ -7,24 +7,9 @@
  ********************************************************************/
 
 #include <nan.h>
-#include "pi_est.h"  // NOLINT(build/include)
 #include "sync.h"  // NOLINT(build/include)
 #include "window_img_getter.h"
 #include <iostream>
-
-// Simple synchronous access to the `Estimate()` function
-NAN_METHOD(CalculateSync) {
-  // expect a number as the first argument
-  int points = Nan::To<int>(info[0]).FromJust();
-  double est = Estimate(points);
-
-  info.GetReturnValue().Set(est);
-}
-
-NAN_METHOD(GetMyNumber) {
-  double retval = GetNumber();
-  info.GetReturnValue().Set(retval);
-}
 
 NAN_METHOD(GetWindowBitmap) {
   Nan::MaybeLocal<v8::String> windowName = Nan::To<v8::String>(info[0]);
