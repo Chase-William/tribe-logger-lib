@@ -19,7 +19,7 @@ using Nan::Set;
 // Expose synchronous and asynchronous access to our
 // Estimate() function
 NAN_MODULE_INIT(InitAll) {
-  Set(target, New<String>("getWindowBitmap").ToLocalChecked(),
+  Set(target, New<String>("GetWindowBitmap").ToLocalChecked(),
     GetFunction(New<FunctionTemplate>(GetWindowBitmap)).ToLocalChecked());
 }
 
