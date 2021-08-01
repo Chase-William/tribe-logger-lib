@@ -1,8 +1,8 @@
-const result = require('./index');
+const result = require('./dist/index');
 const fs = require('fs');
 
-let buff = result.getWindowBitmap("ARK: Survival Evolved");
-console.log("Buffer: ");
+let buff = result.GetWindowBitmap("ARK: Survival Evolved");
+console.log("Js-Buffer: ");
 console.log(buff);
 
 const view = new Uint8Array(buff);

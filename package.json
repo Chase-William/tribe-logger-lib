@@ -2,12 +2,17 @@
   "name": "addon",
   "version": "1.0.0",
   "description": "Native module calculating estimate of PI",
-  "scripts": {    
-    "install": "cmake-js compile"
+  "scripts": {
+    "install": "cmake-js compile",
+    "build:dev": "cmake-js compile && tsc --build"
   },
   "dependencies": {
     "bindings": "^1.5.0",
     "cmake-js": "^6.2.1",
     "nan": "^2.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.10",
+    "typescript": "^4.3.5"
   }
 }
