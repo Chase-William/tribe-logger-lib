@@ -2,18 +2,29 @@
   Authored by Chase Roth 8/1/2021
   See repository root directory for more information.
 */
-
+#pragma once
 #include "window_img_streamer.h"
 
-WindowImgStreamer::WindowImgStreamer() {
+// Constructors
 
+WindowImgStreamer::WindowImgStreamer() {
+  Init();
 }
 
 WindowImgStreamer::WindowImgStreamer(std::string windowName) {
-  srcWindowName = srcWindowName;
+  srcWindowName = windowName;
+  Init();
 }
 
-bool WindowImgStreamer::Start(WindowImgStreamingErrors &err) {
+// Initializer Helper
+
+void WindowImgStreamer::Init() {
+  timer = std::shared_ptr<CustomTimer>(new CustomTimer());  
+}
+
+// Functions
+
+bool WindowImgStreamer::Start(ErrorTypes &err) {
   hwnd = FindWindowA(NULL, srcWindowName.c_str()); // Get source window handle
   if (!hwnd) { // Cannot find window, report error with info
     err = FailedToFindWindow;
@@ -48,10 +59,15 @@ bool WindowImgStreamer::Start(WindowImgStreamingErrors &err) {
     err = FailedToSelectObjectBitmapIntoDeviceContext;
     return false;
   }
+  timer->setInterval([](){
+    MessageBoxA(NULL, "Hello", "Timer", MB_OK);
+  }, 2000);
+  return true;
 }
 
 void WindowImgStreamer::Stop() {
   DeleteObject(hbmpTarget); // cleanup bitmap
   ReleaseDC(NULL, hdcTarget); // Cleanup hdc target
-  ReleaseDC(hwnd, hdcSrcWindow); // Cleanup hdc from the source window handle  
+  ReleaseDC(hwnd, hdcSrcWindow); // Cleanup hdc from the source window handle
+  timer->stop();
 }

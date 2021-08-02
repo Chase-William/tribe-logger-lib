@@ -9,8 +9,8 @@
 #include <array>
 #include <stdio.h>
 
-char* GetNativeWindowBitmap(std::string srcWindowName, unsigned long &size) {
-  HWND hwndSrc = FindWindowA(NULL, srcWindowName.c_str());
+char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
+  HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
   if (!hwndSrc) {
     MessageBoxW(NULL, L"BitBlt failed", L"Failed", MB_OK);
     goto done;
@@ -19,7 +19,7 @@ char* GetNativeWindowBitmap(std::string srcWindowName, unsigned long &size) {
   HDC hdcSrcWindow = GetDC(hwndSrc); // Source window device-context handle
   HDC hdcTarget = CreateCompatibleDC(NULL); // Get in-memory DC, not connected to a device
   HBITMAP hbmpTarget; // Handle to target bmpBuffer
-  BITMAP bmpObj; // Actual Bitmap object from GetObject()
+  BITMAP bmpObj { }; // Actual Bitmap object from GetObject()
   RECT srcClientRect; // Bitmap Dimensions
   DWORD dwSizeofDIB = 0;
   char* lpPixels = NULL;

@@ -6,9 +6,17 @@
 #pragma once
 #include <string>
 #include <Windows.h>
+#include "timer.h"
 
 class WindowImgStreamer {
   public:
+    enum ErrorTypes {
+      FailedToFindWindow,
+      FailedToGetSourceWindowRect,
+      FailedToCreateCompatibleBitmap,
+      FailedToSelectObjectBitmapIntoDeviceContext
+    };
+
     // Create a default WindowImageStreamer
     WindowImgStreamer();
     /*
@@ -17,15 +25,18 @@ class WindowImgStreamer {
     */
     WindowImgStreamer(std::string windowName);
     // Starts the window streaming, returns false if there is a failure
-    bool Start(WindowImgStreamingErrors &err);
+    bool Start(ErrorTypes &err);
     // Stops the window streaming
-    void Stop();
-
+    void Stop();   
   private:
+    void Init();
+
     HWND hwnd;
     std::string srcWindowName;
     bool isWindowValid;
     RECT srcWindowRect;
+
+    std::shared_ptr<CustomTimer> timer;
 
     // Width & Height cache of window rectangle / bitmap
     int width, height;
@@ -33,11 +44,4 @@ class WindowImgStreamer {
     HBITMAP hbmpTarget; // Handle to target bmpBuffer
     HDC hdcSrcWindow; // Handle to device context of source window
     HDC hdcTarget; // Handle to device context of target in memory device context in our case
-};
-
-enum WindowImgStreamingErrors {
-  FailedToFindWindow,
-  FailedToGetSourceWindowRect,
-  FailedToCreateCompatibleBitmap,
-  FailedToSelectObjectBitmapIntoDeviceContext
 };

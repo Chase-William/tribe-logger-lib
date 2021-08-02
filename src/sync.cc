@@ -5,34 +5,41 @@
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
-
+#pragma once
 #include <nan.h>
 #include "sync.h"  // NOLINT(build/include)
 #include "window_img_getter.h"
 #include <iostream>
+#include "window_img_streamer.h"
 
+// Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
   Nan::MaybeLocal<v8::String> windowName = Nan::To<v8::String>(info[0]);
-  v8::Local<v8::String> str;
-  str = windowName.ToLocalChecked();
-
-  //v8::String *v8str = str.operator*();
-  Nan::Utf8String value(str);  // Error here
-
-  //Nan::Utf8String almostStr = Nan::Utf8String(str);
+  // Get non-null string, otherwise crash
+  v8::Local<v8::String> str = windowName.ToLocalChecked();
+  // Start conversion to C++ types
+  Nan::Utf8String value(str);
+  // Get underlying char* from Nan string
   const char* ptr =  value.operator*();
-
-  std::cout << "WindowName given after Nan to C++ type conversion: " << *ptr << std::endl;
-
   unsigned long size;
+  // Call our custom API for polling a bitmap from a target window
   char* buffer = GetNativeWindowBitmap(ptr, size);
-  std::cout << "Buffer Address: " << &buffer << " Buffer Length: " << size << std::endl;
+  // Create JS object Buffer from returned char* buffer (BITMAP w/ header, headerinfo, pixel payload)
   Nan::MaybeLocal<v8::Object> buff = Nan::NewBuffer(
     buffer,
     size,
     DisposeNativeBitmap,
     nullptr
   );
-
+  // Set return
   info.GetReturnValue().Set(buff.ToLocalChecked());
 }
+
+// Start the tribe logger bot
+// NAN_METHOD(StartTribeLogger) {
+  
+// }
+// // Stop the tribe logger bot
+// NAN_METHOD(StopTribeLogger) {
+
+// }

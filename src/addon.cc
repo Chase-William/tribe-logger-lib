@@ -5,7 +5,7 @@
  *
  * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
  ********************************************************************/
-
+#pragma once
 #include <nan.h>
 #include "sync.h"   // NOLINT(build/include)
 
