@@ -10,7 +10,6 @@
 #include "sync.h"  // NOLINT(build/include)
 #include "window_img_getter.h"
 #include <iostream>
-#include "window_img_streamer.h"
 
 // Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
@@ -34,12 +33,3 @@ NAN_METHOD(GetWindowBitmap) {
   // Set return
   info.GetReturnValue().Set(buff.ToLocalChecked());
 }
-
-// Start the tribe logger bot
-// NAN_METHOD(StartTribeLogger) {
-  
-// }
-// // Stop the tribe logger bot
-// NAN_METHOD(StopTribeLogger) {
-
-// }

@@ -4,7 +4,8 @@
   "description": "Native module calculating estimate of PI",
   "scripts": {
     "install": "cmake-js compile",
-    "build:dev": "cmake-js compile && tsc --build"
+    "build:dev": "cmake-js compile && tsc --build",
+    "reconfig": "cmake-js reconfigure"
   },
   "dependencies": {
     "bindings": "^1.5.0",
