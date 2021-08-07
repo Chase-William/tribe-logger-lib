@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 project(addon)
 
 # Build a shared library named after the project from the files in `src/`
-file(GLOB SOURCE_FILES "src/*.cc" "src/*.h")
+file(GLOB SOURCE_FILES "src/window-imagetter/*.cc" "src/window-imagetter/*.h")
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 
 # Gives our library file a .node extension without any "lib" prefix
