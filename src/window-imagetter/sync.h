@@ -13,7 +13,6 @@
 
 NAN_METHOD(GetWindowBitmap);
 
-// NAN_METHOD(StartTribeLogger);
-// NAN_METHOD(StopTribeLogger);
+NAN_METHOD(GetTribeLogText);
 
 #endif  // EXAMPLES_ASYNC_PI_ESTIMATE_SYNC_H_

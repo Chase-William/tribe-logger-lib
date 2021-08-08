@@ -21,6 +21,8 @@ using Nan::Set;
 NAN_MODULE_INIT(InitAll) {
   Set(target, New<String>("GetWindowBitmap").ToLocalChecked(),
     GetFunction(New<FunctionTemplate>(GetWindowBitmap)).ToLocalChecked());
+  Set(target, New<String>("GetTribeLogText").ToLocalChecked(),
+    GetFunction(New<FunctionTemplate>(GetTribeLogText)).ToLocalChecked());
 }
 
 NODE_MODULE(addon, InitAll)
