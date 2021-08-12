@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Native module calculating estimate of PI",
   "scripts": {
-    "install": "cmake-js compile",
+    "install": "npm install && cmake-js compile",
     "build:dev": "cmake-js compile && tsc --build",
     "config": "cmake-js reconfigure"
   },
