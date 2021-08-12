@@ -29,6 +29,7 @@ const char* InternalGetTribeLogText(std::string windowName, int left, int top, i
 
   api->SetRectangle(left, top, right - left, bottom - top);
   Pix *img = pixReadMemBmp(buf, size);
+  api->SetImage(img);
   text = api->GetUTF8Text();
 
   api->End();

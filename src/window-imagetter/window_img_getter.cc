@@ -9,6 +9,8 @@
 #include <array>
 #include <stdio.h>
 
+const float INCH_TO_METER_RATIO = 39.3701f;
+
 char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
   if (!hwndSrc) {
@@ -24,21 +26,26 @@ char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   DWORD dwSizeofDIB = 0;
   char* lpPixels = NULL;
   DWORD dwBmpSize = 0;
-
+  long width, height;
+  
   // Get dimensions of bmpBuffer from source window
   if (!GetClientRect(hwndSrc, &srcClientRect)) {
     MessageBoxW(NULL, L"GetClientRect failed", L"Failed", MB_OK);
     goto done;
   }
+
+  width = srcClientRect.right - srcClientRect.left;
+  height = srcClientRect.bottom - srcClientRect.top;
+
   // Create compatible bmpBuffer with the source window DC
-  hbmpTarget = CreateCompatibleBitmap(hdcSrcWindow, srcClientRect.right - srcClientRect.left, srcClientRect.bottom - srcClientRect.top);
+  hbmpTarget = CreateCompatibleBitmap(hdcSrcWindow, width, height);
   // Sets our HBITMAP as the new bmpBuffer the DC uses
   SelectObject(hdcTarget, hbmpTarget);
   // Retreive bit data by blocks
   if (!BitBlt(
     hdcTarget, // DC target
     0, 0,
-    srcClientRect.right - srcClientRect.left, srcClientRect.bottom - srcClientRect.top, // Dimensions of bmpBuffer
+    width, height, // Dimensions of bmpBuffer
     hdcSrcWindow, // DC source
     0, 0,
     SRCCOPY // Operation type, copy & paste
@@ -46,6 +53,15 @@ char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
     MessageBoxW(NULL, L"BitBlt failed", L"Failed", MB_OK);
     goto done;
   }
+
+  long dpiX, dpiY;
+  { // Get DPI of screen vertical / horizontal
+    HDC screen = GetDC(0);
+    dpiX = (GetDeviceCaps(screen, LOGPIXELSX));
+    dpiY = (GetDeviceCaps(screen, LOGPIXELSY));
+    ReleaseDC(NULL, screen);
+  }  
+
   // Get the BITMAP from the HBITMAP
   GetObject(hbmpTarget, sizeof(BITMAP), &bmpObj);
   BITMAPFILEHEADER bmfHeader;
@@ -57,8 +73,8 @@ char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   bi.biBitCount = 32;
   bi.biCompression = BI_RGB;
   bi.biSizeImage = 0;
-  bi.biXPelsPerMeter = 0;
-  bi.biYPelsPerMeter = 0;
+  bi.biXPelsPerMeter = dpiX * INCH_TO_METER_RATIO;
+  bi.biYPelsPerMeter = dpiY * INCH_TO_METER_RATIO;
   bi.biClrUsed = 0;
   bi.biClrImportant = 0;
   // aligning bits for words?

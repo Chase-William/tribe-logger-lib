@@ -7,10 +7,12 @@
 
 var myModule = require("bindings")("addon");
 
-exports.GetWindowBitmap = function GetWindowBitmap(windowName: string): ArrayBuffer {
-  return myModule.GetWindowBitmap(windowName);
-}
-
-exports.GetTribeLogText = function GetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number) {
-  return myModule.GetTribeLogText(windowName, left, top, right, bottom);
+export module WindowImgetter {
+  export function GetWindowBitmap(windowName: string): ArrayBuffer {
+    return myModule.GetWindowBitmap(windowName);
+  }
+  
+  export function GetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): string {
+    return myModule.GetTribeLogText(windowName, left, top, right, bottom);
+  }
 }

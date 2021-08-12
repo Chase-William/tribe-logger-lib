@@ -1,5 +1,13 @@
 // Tribe Logging API here
+//const tribe_api = require("./window-imagetter/index");
+import { WindowImgetter } from "./window-imagetter/index";
 
+export module TribeLogger {
+  export function GetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): void {
+    const text_logs: string = WindowImgetter.GetTribeLogText(windowName, left, top, right, bottom);
+    console.log(text_logs);
+  }
+}
 /*
   TODO:
 
