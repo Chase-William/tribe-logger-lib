@@ -7,13 +7,18 @@
 #include <string>
 #include <Windows.h>
 
+// struct BitmapReturn {
+//   char* bitmap;
+//   int* err;
+// };
+
 /*
   Gets a bitmap buffer from a specific window.
   Param - srcWindowName, name of window to find and get bitmap from
   Param - size, size of the bitmap buffer being returned
   Return, pointer to the head of the bitmap buffer
 */
-char* GetNativeWindowBitmap(std::string windowName, unsigned long &size);
+std::tuple<int*, char*> GetNativeWindowBitmap(std::string windowName, unsigned long &size);
 
 /*
   Finalizer callback for releasing unmanaged resources.

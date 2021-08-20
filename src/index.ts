@@ -4,7 +4,7 @@ import { WindowImgetter } from "./window-imagetter/index";
 
 export module TribeLogger {
   export function GetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): string {
-    return WindowImgetter.GetTribeLogText(windowName, left, top, right, bottom);
+    return WindowImgetter.TryGetTribeLogText(windowName, left, top, right, bottom);
   }
 }
 /*

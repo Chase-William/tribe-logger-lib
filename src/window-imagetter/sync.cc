@@ -1,10 +1,11 @@
-/*********************************************************************
- * NAN - Native Abstractions for Node.js
- *
- * Copyright (c) 2018 NAN contributors
- *
- * MIT License <https://github.com/nodejs/nan/blob/master/LICENSE.md>
- ********************************************************************/
+/*
+  Need to update both functions below to return a key/value pair like:
+  Object:
+    ErrorCode: NULL,
+    BitmapData: 0x0239F439
+
+  Checkout: https://github.com/nodejs/nan/blob/master/doc/maybe_types.md#api_nan_define_own_property
+*/
 #pragma once
 #include <nan.h>
 #include "sync.h"  // NOLINT(build/include)
@@ -35,7 +36,7 @@ NAN_METHOD(GetWindowBitmap) {
   info.GetReturnValue().Set(buff.ToLocalChecked());
 }
 
-NAN_METHOD(GetTribeLogText) {
+NAN_METHOD(TryGetTribeLogText) {
   Nan::MaybeLocal<v8::String> v8WindowName = Nan::To<v8::String>(info[0]);
   Nan::MaybeLocal<v8::Integer> v8left = Nan::To<v8::Integer>(info[1]);
   Nan::MaybeLocal<v8::Integer> v8top = Nan::To<v8::Integer>(info[2]);
@@ -49,12 +50,30 @@ NAN_METHOD(GetTribeLogText) {
   int top = (int)v8top.ToLocalChecked().operator*()->Value();
   int right = (int)v8right.ToLocalChecked().operator*()->Value();
   int bottom = (int)v8bottom.ToLocalChecked().operator*()->Value();
+  // Get tuple from native function contianing a possible errCode & the data
+  std::tuple<int*, const char*> r = InternalTryGetTribeLogText(windowName, left, top, right, bottom);
+  // Create a blank object that we will append properties to (errCode & data)
+  v8::Local<v8::Object> b = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
 
-  const char* logText = InternalGetTribeLogText(windowName, left, top, right, bottom);
+  v8::MaybeLocal<v8::Number> nanErr;
+  int* err = std::get<0>(r);
 
-  if (!logText) {
-    std::cout << "LogText was empty when returned from func InternalGetTribeLogText" << std::endl;
+  // Nan::Maybe<bool> test = Nan::DefineOwnProperty(b, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err));
+  // If failure to define own property
+  if (!Nan::DefineOwnProperty(b, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err)).ToChecked()) {
+
   }
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(logText).ToLocalChecked());
+  if (err != nullptr) { // Return error
+    nanErr = Nan::New<v8::Number>(err);
+
+  }
+  const char* logText = std::get<1>(r);
+  // if (!logText) {
+  //   std::cout << "LogText was empty when returned from func InternalGetTribeLogText" << std::endl;
+  // }
+  v8::Local<v8::String> rText = Nan::New<v8::String>(logText).ToLocalChecked(); // fix -> to not crash process upon checked
+  
+
+  info.GetReturnValue().Set(rText);
 }

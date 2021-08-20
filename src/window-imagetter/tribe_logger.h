@@ -10,7 +10,7 @@
   Gets the text inside a tribe log.
   Param - windowName, Name of window to use as a source
 */
-const char* InternalGetTribeLogText(
+std::tuple<int*, const char*> InternalTryGetTribeLogText(
   std::string windowName, 
   int left, 
   int top, 

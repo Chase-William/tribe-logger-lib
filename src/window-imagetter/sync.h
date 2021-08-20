@@ -13,6 +13,6 @@
 
 NAN_METHOD(GetWindowBitmap);
 
-NAN_METHOD(GetTribeLogText);
+NAN_METHOD(TryGetTribeLogText);
 
 #endif  // EXAMPLES_ASYNC_PI_ESTIMATE_SYNC_H_

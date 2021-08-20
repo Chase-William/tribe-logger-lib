@@ -12,7 +12,7 @@ export module WindowImgetter {
     return myModule.GetWindowBitmap(windowName);
   }
   
-  export function GetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): string {
-    return myModule.GetTribeLogText(windowName, left, top, right, bottom);
+  export function TryGetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): string {
+    return myModule.TryGetTribeLogText(windowName, left, top, right, bottom);
   }
 }

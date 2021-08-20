@@ -11,10 +11,18 @@
 
 const float INCH_TO_METER_RATIO = 39.3701f;
 
-char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
+enum WindowImageGetterErrors {
+  FailedToFindWindow = 0x01,
+  FailedToGetClientRect = 0x02,
+  BitBlockTransferFailed = 0x03
+};
+
+std::tuple<int*, char*> GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
+  int* err; // Error Pointer
+
   if (!hwndSrc) {
-    MessageBoxW(NULL, L"BitBlt failed", L"Failed", MB_OK);
+    err = new int(FailedToFindWindow);
     goto done;
   } 
 
@@ -30,7 +38,7 @@ char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   
   // Get dimensions of bmpBuffer from source window
   if (!GetClientRect(hwndSrc, &srcClientRect)) {
-    MessageBoxW(NULL, L"GetClientRect failed", L"Failed", MB_OK);
+    err = new int(FailedToGetClientRect);
     goto done;
   }
 
@@ -50,7 +58,7 @@ char* GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
     0, 0,
     SRCCOPY // Operation type, copy & paste
   )) {
-    MessageBoxW(NULL, L"BitBlt failed", L"Failed", MB_OK);
+    err = new int(BitBlockTransferFailed);
     goto done;
   }
 
@@ -116,7 +124,7 @@ done:
   }
   ReleaseDC(NULL, hdcTarget); // Cleanup hdc target
   ReleaseDC(hwndSrc, hdcSrcWindow); // Cleanup hdc from the source window handle  
-  return bmpBuffer;
+  return std::make_tuple(err, bmpBuffer);
 }
 
 void DisposeNativeBitmap(char *data, void *hint) {
