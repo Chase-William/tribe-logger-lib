@@ -25,4 +25,4 @@ NAN_MODULE_INIT(InitAll) {
     GetFunction(New<FunctionTemplate>(GetTribeLogText)).ToLocalChecked());
 }
 
-NODE_MODULE(addon, InitAll)
+NAN_MODULE_WORKER_ENABLED(addon, InitAll)

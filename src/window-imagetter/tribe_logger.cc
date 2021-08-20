@@ -33,8 +33,9 @@ const char* InternalGetTribeLogText(std::string windowName, int left, int top, i
   text = api->GetUTF8Text();
 
   api->End();
-  delete api;
-  pixDestroy(&img);
+  delete api; // Cleanup tesseract api
+  pixDestroy(&img); // Cleanup leptonic bitmap type for tesseract
+  delete buf; // Cleanup bitmap
 
-  return text;
+  return text; // Return text found
 }
