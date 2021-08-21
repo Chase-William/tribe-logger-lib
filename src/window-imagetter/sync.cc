@@ -34,7 +34,7 @@ NAN_METHOD(GetWindowBitmap) {
   // Create propNames and values
   v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
   v8::Local<v8::Value> errorValue = Nan::New(err == NULL ? 0 : *err);
-  
+  delete err; // cleanup bc we are passing by value to v8 so this can be deleted
   v8::Local<v8::String> bufferName = Nan::New("BitmapBuffer").ToLocalChecked();
   v8::Local<v8::Object> bufferValue = Nan::NewBuffer(buffer, (uint32_t)size).ToLocalChecked();
   
