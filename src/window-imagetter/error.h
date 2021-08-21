@@ -1,8 +1,8 @@
 #pragma once
 #include <tuple>
-//#include <nan.h>
 
 enum WinImgGetError : int {
+  Success = 0,
   FailedToFindWindow = 1,
   FailedToGetClientRect = 2,
   BitBlockTransferFailed = 3,

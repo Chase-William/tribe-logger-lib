@@ -1,11 +1,14 @@
-const getter = require('./dist/window-imagetter/index');
+const { WindowImgetter, WinImgGetError } = require('./dist/window-imagetter/index');
 const fs = require('fs');
 
-const bitmapResult = getter.WindowImgetter.GetWindowBitmap("ARK: Survival Evolved");
+const bitmapResult = WindowImgetter.GetWindowBitmap("ARK: Survival Evolved");
 
-//const bitmapResult = getter.WindowImgetter.CreateNewBitmapReturn(10);
-//console.log("Buffer returned: " + bitmapResult.BitmapBuffer);
+console.log("ErrorCode: " + bitmapResult.ErrorCode);
 
+if (!bitmapResult.ErrorCode == WinImgGetError.Success) {
+  console.log("An issue occured and therefore the bitmap cannot be saved...");
+  return;
+}
 const view = new Uint8Array(bitmapResult.BitmapBuffer);
 console.log(view);
 

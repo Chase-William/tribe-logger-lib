@@ -13,23 +13,22 @@ const float INCH_TO_METER_RATIO = 39.3701f;
 
 WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
-  int* err; // Error Pointer
-
-  if (!hwndSrc) {
-    err = new int(WinImgGetError::FailedToFindWindow);
-    goto done;
-  } 
-
+  int* err = new int(WinImgGetError::Success); // Error Pointer  
+  size = 0; // Initialize size otherwise unitialized memory is use and has undefined behavior
   HDC hdcSrcWindow = GetDC(hwndSrc); // Source window device-context handle
   HDC hdcTarget = CreateCompatibleDC(NULL); // Get in-memory DC, not connected to a device
   HBITMAP hbmpTarget; // Handle to target bmpBuffer
-  BITMAP bmpObj { }; // Actual Bitmap object from GetObject()
+  BITMAP bmpObj; // Actual Bitmap object from GetObject()  
+  if (!hwndSrc) {
+    err = new int(WinImgGetError::FailedToFindWindow);
+    goto done;
+  }   
   RECT srcClientRect; // Bitmap Dimensions
   DWORD dwSizeofDIB = 0;
   char* lpPixels = NULL;
   DWORD dwBmpSize = 0;
-  long width, height;
-  
+  long width, height;  
+
   // Get dimensions of bmpBuffer from source window
   if (!GetClientRect(hwndSrc, &srcClientRect)) {
     err = new int(WinImgGetError::FailedToGetClientRect);
@@ -113,9 +112,11 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   std::cout << "bmpBuffer: " << &bmpBuffer << std::endl;
 
 done:
-  if (!DeleteObject(hbmpTarget)) { // Cleanup HBITMAP
-    std::cout << "Failed to delete: hbmpTarget" << std::endl;
-  }
+  if (!hbmpTarget) {
+    if (!DeleteObject(hbmpTarget)) { // Cleanup HBITMAP
+      std::cout << "Failed to delete: hbmpTarget" << std::endl;
+    }
+  }  
   ReleaseDC(NULL, hdcTarget); // Cleanup hdc target
   ReleaseDC(hwndSrc, hdcSrcWindow); // Cleanup hdc from the source window handle
   return WinImgRtrn(err, bmpBuffer);

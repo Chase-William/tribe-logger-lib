@@ -7,8 +7,16 @@
 
 var myModule = require("bindings")("addon");
 
+export enum WinImgGetError {
+  Success = 0,
+  FailedToFindWindow = 1,
+  FailedToGetClientRect = 2,
+  BitBlockTransferFailed = 3,
+  TesseractInitializationFailure = 4
+};
+
 export module WindowImgetter {
-  export function GetWindowBitmap(windowName: string): BitmapReturn {
+  export function GetWindowBitmap(windowName: string): BitmapResult {
     return myModule.GetWindowBitmap(windowName);
   }
   
@@ -16,17 +24,12 @@ export module WindowImgetter {
     return myModule.TryGetTribeLogText(windowName, left, top, right, bottom);
   }
 
-  export function CreateNewBitmapReturn(value: number): BitmapReturn {
+  export function CreateNewBitmapReturn(value: number): BitmapResult {
     return myModule.NewBitmapReturn(value);
   }
 
-  export class BitmapReturn {
-    GetBitmapBuffer(): ArrayBuffer {
-      return this.GetBitmapBuffer();
-    }
-
-    GetErrorCode(): Number {
-      return this.GetErrorCode();
-    }
+  export class BitmapResult {
+    ErrorCode: WinImgGetError;
+    BitmapBuffer: ArrayBuffer;
   }
 }
