@@ -29,6 +29,7 @@ NAN_METHOD(GetWindowBitmap) {
   // v8::Local<v8::Object> srcObj = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
   
 
+
   // if (!err) { // If there is a error present, run the following
   //   Nan::Set(srcObj, Nan::New("ErrorCode").ToLocalChecked(), Nan::New<v8::Integer>(*err));
   //   Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), Nan::Null());
@@ -75,8 +76,6 @@ NAN_METHOD(TryGetTribeLogText) {
   Nan::MaybeLocal<v8::Integer> v8top = Nan::To<v8::Integer>(info[2]);
   Nan::MaybeLocal<v8::Integer> v8right = Nan::To<v8::Integer>(info[3]);
   Nan::MaybeLocal<v8::Integer> v8bottom = Nan::To<v8::Integer>(info[4]);
-
-
 
   v8::Local<v8::String> str = v8WindowName.ToLocalChecked(); // Nan::MaybeLocal<v8:String> to std::string conversion
   std::string windowName = std::string(Nan::Utf8String(str).operator*());
