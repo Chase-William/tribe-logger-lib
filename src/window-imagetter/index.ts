@@ -8,7 +8,7 @@
 var myModule = require("bindings")("addon");
 
 export module WindowImgetter {
-  export function GetWindowBitmap(windowName: string): ArrayBuffer {
+  export function GetWindowBitmap(windowName: string): BitmapReturn {
     return myModule.GetWindowBitmap(windowName);
   }
   
@@ -21,8 +21,12 @@ export module WindowImgetter {
   }
 
   export class BitmapReturn {
-    GetValue(): Number {
-      return this.GetValue();
+    GetBitmapBuffer(): ArrayBuffer {
+      return this.GetBitmapBuffer();
+    }
+
+    GetErrorCode(): Number {
+      return this.GetErrorCode();
     }
   }
 }

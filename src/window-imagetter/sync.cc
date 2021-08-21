@@ -8,10 +8,11 @@
 */
 #pragma once
 #include <nan.h>
-#include "sync.h"  // NOLINT(build/include)
+#include <iostream>
+#include "sync.h"
 #include "window_img_getter.h"
 #include "tribe_logger.h"
-#include <iostream>
+#include "bitmap_result.h"
 
 // Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
@@ -26,9 +27,47 @@ NAN_METHOD(GetWindowBitmap) {
   // Call our custom API for polling a bitmap from a target window
   WinImgRtrn result = GetNativeWindowBitmap(ptr, size);
   int* err = std::get<0>(result);
+  char* buffer = std::get<1>(result);
+
+  // Create callback parameters
+  // const int argc = 1;
+  // v8::Local<v8::Value> args[argc];
+
+  // Create generic JS object for status
+  v8::Local<v8::Object> jsObject = Nan::New<v8::Object>();
+
+  // Create property names & values for each field
+  v8::Local<v8::String> propName = Nan::New("BitmapBuffer").ToLocalChecked();
+  v8::Local<v8::Object> propValue = Nan::NewBuffer(buffer, (uint32_t)size).ToLocalChecked();
+  std::cout << "Before Set\n"; 
+  // Add field to JS object
+  Nan::Set(jsObject, propName, propValue);
+  std::cout << "After Set\n";
+
+  info.GetReturnValue().Set(jsObject);
+  // And again...
+  // propName = Nan::New("statusMessage").ToLocalChecked();
+  // propValue = Nan::New(status->statusMessage).ToLocalChecked();
+  // Nan::Set(jsObject, propName, propValue);
+
+  // .... Etc., etc. for all the other fields ....
+
+  // Set parameter to JS object
+  //args[0] = jsObject;
+
+  // Pass status to Javascript
+  //v8::Local<v8::Value> jsReturnValue = jsStatusDelegate.Call(argc, args);
+
+
+
+
+  
   // v8::Local<v8::Object> srcObj = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
   
+  // Add the correct parameters and this should work
+  // v8::Local<BitmapResult> result2 = Nan::NewInstance();
 
+  // info.GetReturnValue().Set(result2);
 
   // if (!err) { // If there is a error present, run the following
   //   Nan::Set(srcObj, Nan::New("ErrorCode").ToLocalChecked(), Nan::New<v8::Integer>(*err));
