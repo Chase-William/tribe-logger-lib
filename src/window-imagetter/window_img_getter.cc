@@ -109,10 +109,10 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   std::memcpy(bmpBuffer, &bmfHeader, sizeof(bmfHeader));
   std::memcpy(bmpBuffer +  sizeof(bmfHeader), &bi, sizeof(bi));
   // Output
-  std::cout << "bmpBuffer: " << &bmpBuffer << std::endl;
+  // std::cout << "bmpBuffer: " << &bmpBuffer << std::endl;
 
 done:
-  if (!hbmpTarget) {
+  if (hbmpTarget) {
     if (!DeleteObject(hbmpTarget)) { // Cleanup HBITMAP
       std::cout << "Failed to delete: hbmpTarget" << std::endl;
     }

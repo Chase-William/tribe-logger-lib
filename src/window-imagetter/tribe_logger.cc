@@ -18,20 +18,17 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int 
   WinImgRtrn r = GetNativeWindowBitmap(windowName, size);
 
   int* err = std::get<0>(r);
-  if (!err) // Return error right away without further execution
+  if (*err != WinImgGetError::Success) // Return error right away without further execution
     return r;
   
   const l_uint8 *buf = (l_uint8*)std::get<1>(r);
-  //const std::shared_ptr<l_uint8*> buf = std::make_shared<l_uint8*>(GetNativeWindowBitmap(windowName, size));
-  //const l_uint8* buf = (l_uint8*)GetNativeWindowBitmap(windowName, size);
-  //const l_uint8 *bmpBuf = std::static_pointer_cast<l_uint8 *>(bmpBuf);
   const char *text;
 
   tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
   // Init with English, without lang specification
   if (api->Init(NULL, "eng")) {
     fprintf(stderr, "Could not initialize tesseract.\n");
-    std::get<0>(r) = new int(TesseractInitializationFailure);
+    *err = WinImgGetError::TesseractInitializationFailure;
     return r;
   }
 
@@ -45,5 +42,5 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int 
   pixDestroy(&img); // Cleanup leptonic bitmap type for tesseract
   delete buf; // Cleanup bitmap
 
-  return WinImgTextRtrn(NULL, &*text); // Return text found
+  return WinImgTextRtrn(err, text); // Return text found
 }

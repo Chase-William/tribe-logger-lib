@@ -1,19 +1,36 @@
-// Tribe Logging API here
-//const tribe_api = require("./window-imagetter/index");
-import { WindowImgetter } from "./window-imagetter/index";
+/*
+  Authored by Chase Roth 7/30/2021
+  See repository root directory for more information.
 
-export module TribeLogger {
-  export function GetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): string {
-    return WindowImgetter.TryGetTribeLogText(windowName, left, top, right, bottom);
+  Type-Script front end for using this API.
+*/
+
+var myModule = require("bindings")("addon");
+
+export enum WinImgGetError {
+  Success = 0,
+  FailedToFindWindow = 1,
+  FailedToGetClientRect = 2,
+  BitBlockTransferFailed = 3,
+  TesseractInitializationFailure = 4
+};
+
+export module WindowImgetter {
+  export function GetWindowBitmap(windowName: string): BitmapResult {
+    return myModule.GetWindowBitmap(windowName);
+  }
+  
+  export function TryGetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): TribeLog {
+    return myModule.TryGetTribeLogText(windowName, left, top, right, bottom);
+  }
+
+  export class BitmapResult {
+    ErrorCode: WinImgGetError;
+    BitmapBuffer: ArrayBuffer;
+  }
+  
+  export class TribeLog {
+    ErrorCode: WinImgGetError;
+    TribeLogText: string;
   }
 }
-/*
-  TODO:
-
-  - Create Get TribeLogInfo() that returns the string of text containing the tribe log text from the bitmap
-    - Add correct params
-    - Call internal GetWindowBitmap()
-    - Use Tesseract to get text
-    - Return text in v8 string to ts/js sender
-
-*/

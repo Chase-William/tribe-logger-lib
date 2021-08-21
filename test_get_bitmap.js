@@ -1,4 +1,4 @@
-const { WindowImgetter, WinImgGetError } = require('./dist/window-imagetter/index');
+const { WindowImgetter, WinImgGetError } = require('./dist/index');
 const fs = require('fs');
 
 const bitmapResult = WindowImgetter.GetWindowBitmap("ARK: Survival Evolved");

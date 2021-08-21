@@ -33,7 +33,7 @@ NAN_METHOD(GetWindowBitmap) {
 
   // Create propNames and values
   v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
-  v8::Local<v8::Value> errorValue = Nan::New(err == NULL ? 0 : *err);
+  v8::Local<v8::Number> errorValue = Nan::New(err == NULL ? 0 : *err);
   delete err; // cleanup bc we are passing by value to v8 so this can be deleted
   v8::Local<v8::String> bufferName = Nan::New("BitmapBuffer").ToLocalChecked();
   v8::Local<v8::Object> bufferValue = Nan::NewBuffer(buffer, (uint32_t)size).ToLocalChecked();
@@ -61,29 +61,19 @@ NAN_METHOD(TryGetTribeLogText) {
   int right = (int)v8right.ToLocalChecked().operator*()->Value();
   int bottom = (int)v8bottom.ToLocalChecked().operator*()->Value();
   // Get tuple from native function contianing a possible errCode & the data
-  WinImgTextRtrn r = InternalTryGetTribeLogText(windowName, left, top, right, bottom);
-  // Create a blank object that we will append properties to (errCode & data)
-  //v8::Local<v8::Object> srcObj = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
+  WinImgTextRtrn result = InternalTryGetTribeLogText(windowName, left, top, right, bottom);
+  int* err = std::get<0>(result);
+  const char* logText = std::get<1>(result);
+ 
+  v8::Local<v8::Object> jsObj = Nan::New<v8::Object>();
+  v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
+  v8::Local<v8::Number> errorValue = Nan::New(err == NULL ? 0 : *err);
+  delete err;
+  v8::Local<v8::String> logTextName = Nan::New("TribeLogText").ToLocalChecked();
+  v8::Local<v8::String> logTextValue = Nan::New(logText).ToLocalChecked();  
+  Nan::Set(jsObj, errorName, errorValue);
+  Nan::Set(jsObj, logTextName, logTextValue);
 
-  // v8::MaybeLocal<v8::Number> nanErr;
-  // int* err = std::get<0>(r);
-
-  // // Nan::Maybe<bool> test = Nan::DefineOwnProperty(srcObj, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err));
-  // // If failure to define own property
-  // // if (!Nan::DefineOwnProperty(srcObj, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err)).ToChecked()) {
-
-  // // }
-
-  // if (err != nullptr) { // Return error
-  //   nanErr = Nan::New<v8::Number>(err);
-
-  // }
-  // const char* logText = std::get<1>(r);
-  // // if (!logText) {
-  // //   std::cout << "LogText was empty when returned from func InternalGetTribeLogText" << std::endl;
-  // // }
-  // v8::Local<v8::String> rText = Nan::New<v8::String>(logText).ToLocalChecked(); // fix -> to not crash process upon checked
-  
-
-  // info.GetReturnValue().Set(rText);
+  // Set object as return type
+  info.GetReturnValue().Set(jsObj);
 }
