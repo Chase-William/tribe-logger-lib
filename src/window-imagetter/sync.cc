@@ -12,7 +12,6 @@
 #include "sync.h"
 #include "window_img_getter.h"
 #include "tribe_logger.h"
-#include "bitmap_result.h"
 
 // Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
@@ -29,84 +28,22 @@ NAN_METHOD(GetWindowBitmap) {
   int* err = std::get<0>(result);
   char* buffer = std::get<1>(result);
 
-  // Create callback parameters
-  // const int argc = 1;
-  // v8::Local<v8::Value> args[argc];
+  // Create generic JS object to append to
+  v8::Local<v8::Object> jsObj = Nan::New<v8::Object>();
 
-  // Create generic JS object for status
-  v8::Local<v8::Object> jsObject = Nan::New<v8::Object>();
-
-  // Create property names & values for each field
-  v8::Local<v8::String> propName = Nan::New("BitmapBuffer").ToLocalChecked();
-  v8::Local<v8::Object> propValue = Nan::NewBuffer(buffer, (uint32_t)size).ToLocalChecked();
-  std::cout << "Before Set\n"; 
-  // Add field to JS object
-  Nan::Set(jsObject, propName, propValue);
-  std::cout << "After Set\n";
-
-  info.GetReturnValue().Set(jsObject);
-  // And again...
-  // propName = Nan::New("statusMessage").ToLocalChecked();
-  // propValue = Nan::New(status->statusMessage).ToLocalChecked();
-  // Nan::Set(jsObject, propName, propValue);
-
-  // .... Etc., etc. for all the other fields ....
-
-  // Set parameter to JS object
-  //args[0] = jsObject;
-
-  // Pass status to Javascript
-  //v8::Local<v8::Value> jsReturnValue = jsStatusDelegate.Call(argc, args);
-
-
-
-
+  // Create propNames and values
+  v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
+  v8::Local<v8::Value> errorValue = Nan::New(*err);
   
-  // v8::Local<v8::Object> srcObj = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
+  v8::Local<v8::String> bufferName = Nan::New("BitmapBuffer").ToLocalChecked();
+  v8::Local<v8::Object> bufferValue = Nan::NewBuffer(buffer, (uint32_t)size).ToLocalChecked();
   
-  // Add the correct parameters and this should work
-  // v8::Local<BitmapResult> result2 = Nan::NewInstance();
+  // Apply properties
+  Nan::Set(jsObj, errorName, errorValue);
+  Nan::Set(jsObj, bufferName, bufferValue);
 
-  // info.GetReturnValue().Set(result2);
-
-  // if (!err) { // If there is a error present, run the following
-  //   Nan::Set(srcObj, Nan::New("ErrorCode").ToLocalChecked(), Nan::New<v8::Integer>(*err));
-  //   Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), Nan::Null());
-  // }
-  // else { // No errors so far
-  //   std::cout << "before" << std::endl;
-  //   auto test = Nan::New("ErrorCode").ToLocalChecked(); // fine
-  //   std::cout << "middle" << std::endl;
-  //   auto test2 = Nan::Null();
-  //   std::cout << "middle-2" << std::endl;
-    
-  //   if (Nan::DefineOwnProperty(srcObj, test, test2).ToChecked()) {
-  //     std::cout << "Failed Nan:set Line 42" << std::endl;
-  //   }
-
-    
-  //   // if (Nan::Set(srcObj, test, test2).ToChecked()) {
-  //   //   std::cout << "Failed Nan:set Line 42" << std::endl;
-  //   // }
-  //   std::cout << "after" << std::endl;
-  //   char* buffer = std::get<1>(result);
-  //   // Create JS object Buffer from returned char* buffer (BITMAP w/ header, headerinfo, pixel payload)
-  //   Nan::MaybeLocal<v8::Object> buff = Nan::NewBuffer(
-  //     buffer,
-  //     size,
-  //     DisposeNativeBitmap,
-  //     nullptr
-  //   );
-
-  //   v8::Local<v8::Object> *bufLocal;
-  //   if (!buff.ToLocal(bufLocal)) // If the buffer fails conversion to local, return null without crashing the process
-  //     Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), Nan::Null());    
-  //   else // Conversion to local should succeed
-  //     Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), buff.ToLocalChecked());
-    
-  //   // Set return
-  //   info.GetReturnValue().Set(srcObj);
-  // }  
+  // Set object as return type
+  info.GetReturnValue().Set(jsObj);
 }
 
 NAN_METHOD(TryGetTribeLogText) {
