@@ -24,16 +24,49 @@ NAN_METHOD(GetWindowBitmap) {
   const char* ptr =  value.operator*();
   unsigned long size;
   // Call our custom API for polling a bitmap from a target window
-  char* buffer = GetNativeWindowBitmap(ptr, size);
-  // Create JS object Buffer from returned char* buffer (BITMAP w/ header, headerinfo, pixel payload)
-  Nan::MaybeLocal<v8::Object> buff = Nan::NewBuffer(
-    buffer,
-    size,
-    DisposeNativeBitmap,
-    nullptr
-  );
-  // Set return
-  info.GetReturnValue().Set(buff.ToLocalChecked());
+  WinImgRtrn result = GetNativeWindowBitmap(ptr, size);
+  int* err = std::get<0>(result);
+  // v8::Local<v8::Object> srcObj = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
+  
+
+  // if (!err) { // If there is a error present, run the following
+  //   Nan::Set(srcObj, Nan::New("ErrorCode").ToLocalChecked(), Nan::New<v8::Integer>(*err));
+  //   Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), Nan::Null());
+  // }
+  // else { // No errors so far
+  //   std::cout << "before" << std::endl;
+  //   auto test = Nan::New("ErrorCode").ToLocalChecked(); // fine
+  //   std::cout << "middle" << std::endl;
+  //   auto test2 = Nan::Null();
+  //   std::cout << "middle-2" << std::endl;
+    
+  //   if (Nan::DefineOwnProperty(srcObj, test, test2).ToChecked()) {
+  //     std::cout << "Failed Nan:set Line 42" << std::endl;
+  //   }
+
+    
+  //   // if (Nan::Set(srcObj, test, test2).ToChecked()) {
+  //   //   std::cout << "Failed Nan:set Line 42" << std::endl;
+  //   // }
+  //   std::cout << "after" << std::endl;
+  //   char* buffer = std::get<1>(result);
+  //   // Create JS object Buffer from returned char* buffer (BITMAP w/ header, headerinfo, pixel payload)
+  //   Nan::MaybeLocal<v8::Object> buff = Nan::NewBuffer(
+  //     buffer,
+  //     size,
+  //     DisposeNativeBitmap,
+  //     nullptr
+  //   );
+
+  //   v8::Local<v8::Object> *bufLocal;
+  //   if (!buff.ToLocal(bufLocal)) // If the buffer fails conversion to local, return null without crashing the process
+  //     Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), Nan::Null());    
+  //   else // Conversion to local should succeed
+  //     Nan::Set(srcObj, Nan::New("BitmapBuffer").ToLocalChecked(), buff.ToLocalChecked());
+    
+  //   // Set return
+  //   info.GetReturnValue().Set(srcObj);
+  // }  
 }
 
 NAN_METHOD(TryGetTribeLogText) {
@@ -43,6 +76,8 @@ NAN_METHOD(TryGetTribeLogText) {
   Nan::MaybeLocal<v8::Integer> v8right = Nan::To<v8::Integer>(info[3]);
   Nan::MaybeLocal<v8::Integer> v8bottom = Nan::To<v8::Integer>(info[4]);
 
+
+
   v8::Local<v8::String> str = v8WindowName.ToLocalChecked(); // Nan::MaybeLocal<v8:String> to std::string conversion
   std::string windowName = std::string(Nan::Utf8String(str).operator*());
 
@@ -51,29 +86,29 @@ NAN_METHOD(TryGetTribeLogText) {
   int right = (int)v8right.ToLocalChecked().operator*()->Value();
   int bottom = (int)v8bottom.ToLocalChecked().operator*()->Value();
   // Get tuple from native function contianing a possible errCode & the data
-  std::tuple<int*, const char*> r = InternalTryGetTribeLogText(windowName, left, top, right, bottom);
+  WinImgTextRtrn r = InternalTryGetTribeLogText(windowName, left, top, right, bottom);
   // Create a blank object that we will append properties to (errCode & data)
-  v8::Local<v8::Object> b = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
+  //v8::Local<v8::Object> srcObj = Nan::Nothing<v8::Local<v8::Object>>().ToChecked();  
 
-  v8::MaybeLocal<v8::Number> nanErr;
-  int* err = std::get<0>(r);
+  // v8::MaybeLocal<v8::Number> nanErr;
+  // int* err = std::get<0>(r);
 
-  // Nan::Maybe<bool> test = Nan::DefineOwnProperty(b, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err));
-  // If failure to define own property
-  if (!Nan::DefineOwnProperty(b, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err)).ToChecked()) {
+  // // Nan::Maybe<bool> test = Nan::DefineOwnProperty(srcObj, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err));
+  // // If failure to define own property
+  // // if (!Nan::DefineOwnProperty(srcObj, Nan::New<v8::String>("ErrorCode").ToLocalChecked(), Nan::New<v8::Number>(err)).ToChecked()) {
 
-  }
+  // // }
 
-  if (err != nullptr) { // Return error
-    nanErr = Nan::New<v8::Number>(err);
+  // if (err != nullptr) { // Return error
+  //   nanErr = Nan::New<v8::Number>(err);
 
-  }
-  const char* logText = std::get<1>(r);
-  // if (!logText) {
-  //   std::cout << "LogText was empty when returned from func InternalGetTribeLogText" << std::endl;
   // }
-  v8::Local<v8::String> rText = Nan::New<v8::String>(logText).ToLocalChecked(); // fix -> to not crash process upon checked
+  // const char* logText = std::get<1>(r);
+  // // if (!logText) {
+  // //   std::cout << "LogText was empty when returned from func InternalGetTribeLogText" << std::endl;
+  // // }
+  // v8::Local<v8::String> rText = Nan::New<v8::String>(logText).ToLocalChecked(); // fix -> to not crash process upon checked
   
 
-  info.GetReturnValue().Set(rText);
+  // info.GetReturnValue().Set(rText);
 }

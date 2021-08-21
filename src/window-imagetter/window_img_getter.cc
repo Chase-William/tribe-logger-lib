@@ -11,18 +11,12 @@
 
 const float INCH_TO_METER_RATIO = 39.3701f;
 
-enum WindowImageGetterErrors {
-  FailedToFindWindow = 0x01,
-  FailedToGetClientRect = 0x02,
-  BitBlockTransferFailed = 0x03
-};
-
-std::tuple<int*, char*> GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
+WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
   int* err; // Error Pointer
 
   if (!hwndSrc) {
-    err = new int(FailedToFindWindow);
+    err = new int(WinImgGetError::FailedToFindWindow);
     goto done;
   } 
 
@@ -38,7 +32,7 @@ std::tuple<int*, char*> GetNativeWindowBitmap(std::string windowName, unsigned l
   
   // Get dimensions of bmpBuffer from source window
   if (!GetClientRect(hwndSrc, &srcClientRect)) {
-    err = new int(FailedToGetClientRect);
+    err = new int(WinImgGetError::FailedToGetClientRect);
     goto done;
   }
 
@@ -58,13 +52,13 @@ std::tuple<int*, char*> GetNativeWindowBitmap(std::string windowName, unsigned l
     0, 0,
     SRCCOPY // Operation type, copy & paste
   )) {
-    err = new int(BitBlockTransferFailed);
+    err = new int(WinImgGetError::BitBlockTransferFailed);
     goto done;
   }
 
   long dpiX, dpiY;
   { // Get DPI of screen vertical / horizontal
-    HDC screen = GetDC(0);
+    HDC screen = GetDC(NULL);
     dpiX = (GetDeviceCaps(screen, LOGPIXELSX));
     dpiY = (GetDeviceCaps(screen, LOGPIXELSY));
     ReleaseDC(NULL, screen);
@@ -123,8 +117,8 @@ done:
     std::cout << "Failed to delete: hbmpTarget" << std::endl;
   }
   ReleaseDC(NULL, hdcTarget); // Cleanup hdc target
-  ReleaseDC(hwndSrc, hdcSrcWindow); // Cleanup hdc from the source window handle  
-  return std::make_tuple(err, bmpBuffer);
+  ReleaseDC(hwndSrc, hdcSrcWindow); // Cleanup hdc from the source window handle
+  return WinImgRtrn(err, bmpBuffer);
 }
 
 void DisposeNativeBitmap(char *data, void *hint) {

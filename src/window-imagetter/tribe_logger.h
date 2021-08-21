@@ -5,12 +5,13 @@
 
 #pragma once
 #include <string>
+#include "error.h"
 
 /*
   Gets the text inside a tribe log.
   Param - windowName, Name of window to use as a source
 */
-std::tuple<int*, const char*> InternalTryGetTribeLogText(
+WinImgTextRtrn InternalTryGetTribeLogText(
   std::string windowName, 
   int left, 
   int top, 

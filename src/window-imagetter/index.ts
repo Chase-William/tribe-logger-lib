@@ -15,4 +15,14 @@ export module WindowImgetter {
   export function TryGetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): string {
     return myModule.TryGetTribeLogText(windowName, left, top, right, bottom);
   }
+
+  export function CreateNewBitmapReturn(value: number): BitmapReturn {
+    return myModule.NewBitmapReturn(value);
+  }
+
+  export class BitmapReturn {
+    GetValue(): Number {
+      return this.GetValue();
+    }
+  }
 }

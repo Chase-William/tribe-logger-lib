@@ -6,6 +6,7 @@
 #pragma once
 #include <string>
 #include <Windows.h>
+#include "error.h"
 
 // struct BitmapReturn {
 //   char* bitmap;
@@ -18,9 +19,9 @@
   Param - size, size of the bitmap buffer being returned
   Return, pointer to the head of the bitmap buffer
 */
-std::tuple<int*, char*> GetNativeWindowBitmap(std::string windowName, unsigned long &size);
+WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size);
 
 /*
   Finalizer callback for releasing unmanaged resources.
 */
-void DisposeNativeBitmap(char *data, void *hint); 
+void DisposeNativeBitmap(char *data, void *hint);

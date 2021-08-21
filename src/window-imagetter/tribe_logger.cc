@@ -12,15 +12,15 @@
 #include <leptonica/allheaders.h>
 
 
-std::tuple<int*, const char*>InternalGetTribeLogText(std::string windowName, int left, int top, int right, int bottom) {
+WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int top, int right, int bottom) {
   unsigned long size;
 
-  std::tuple<int*, char*> r = GetNativeWindowBitmap(windowName, size);
+  WinImgRtrn r = GetNativeWindowBitmap(windowName, size);
 
-  int *err = std::get<0>(r);
-  if (err != nullptr) {
-    return std::make_tuple<int*, const char*>(&(*err), NULL);
-  }
+  int* err = std::get<0>(r);
+  if (!err) // Return error right away without further execution
+    return r;
+  
   const l_uint8 *buf = (l_uint8*)std::get<1>(r);
   //const std::shared_ptr<l_uint8*> buf = std::make_shared<l_uint8*>(GetNativeWindowBitmap(windowName, size));
   //const l_uint8* buf = (l_uint8*)GetNativeWindowBitmap(windowName, size);
@@ -31,7 +31,8 @@ std::tuple<int*, const char*>InternalGetTribeLogText(std::string windowName, int
   // Init with English, without lang specification
   if (api->Init(NULL, "eng")) {
     fprintf(stderr, "Could not initialize tesseract.\n");
-    return std::make_tuple<int*, const char*>(new int(5), NULL);
+    std::get<0>(r) = new int(TesseractInitializationFailure);
+    return r;
   }
 
   api->SetRectangle(left, top, right - left, bottom - top);
@@ -44,5 +45,5 @@ std::tuple<int*, const char*>InternalGetTribeLogText(std::string windowName, int
   pixDestroy(&img); // Cleanup leptonic bitmap type for tesseract
   delete buf; // Cleanup bitmap
 
-  return std::make_tuple<int*, const char*>(NULL, &(*text)); // Return text found
+  return WinImgTextRtrn(NULL, &*text); // Return text found
 }
