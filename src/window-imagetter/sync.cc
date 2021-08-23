@@ -13,6 +13,10 @@
 #include "window_img_getter.h"
 #include "tribe_logger.h"
 
+NAN_METHOD(TestMethod) {
+  info.GetReturnValue().Set(Nan::New("Was able to retrieve a value (string) from the C++ back-end.").ToLocalChecked());
+}
+
 // Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
   Nan::MaybeLocal<v8::String> v8WindowName = Nan::To<v8::String>(info[0]);

@@ -7,6 +7,8 @@ NAN_MODULE_INIT(InitAll) {
     Nan::GetFunction(Nan::New<v8::FunctionTemplate>(GetWindowBitmap)).ToLocalChecked());
   Nan::Set(target, Nan::New<v8::String>("TryGetTribeLogText").ToLocalChecked(),
     Nan::GetFunction(Nan::New<v8::FunctionTemplate>(TryGetTribeLogText)).ToLocalChecked());
+  Nan::Set(target, Nan::New<v8::String>("TestMethod").ToLocalChecked(),
+    Nan::GetFunction(Nan::New<v8::FunctionTemplate>(TestMethod)).ToLocalChecked());
 }
 
 //NODE_MODULE(addon, InitAll);

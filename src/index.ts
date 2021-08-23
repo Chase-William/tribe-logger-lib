@@ -24,6 +24,10 @@ export module WindowImgetter {
     return myModule.TryGetTribeLogText(windowName, left, top, right, bottom);
   }
 
+  export function TestMethod(): string {
+    return myModule.TestMethod();
+  }
+
   export class BitmapResult {
     ErrorCode: WinImgGetError;
     BitmapBuffer: ArrayBuffer;
