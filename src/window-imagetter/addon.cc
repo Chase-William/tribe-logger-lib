@@ -9,5 +9,5 @@ NAN_MODULE_INIT(InitAll) {
     Nan::GetFunction(Nan::New<v8::FunctionTemplate>(TryGetTribeLogText)).ToLocalChecked());
 }
 
-NODE_MODULE(addon, InitAll);
-//NAN_MODULE_WORKER_ENABLED(addon, InitAll)
+//NODE_MODULE(addon, InitAll);
+NAN_MODULE_WORKER_ENABLED(addon, InitAll)
