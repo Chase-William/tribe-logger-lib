@@ -4,6 +4,7 @@
   "description": "Testing native node addons for my other more complex library.",
   "main": "index.js",
   "scripts": {
+    "init": "npm install && npm run build",
     "build": "node-gyp rebuild --target=13.1.9 --arch=x64 --dist-url=https://electronjs.org/headers && tsc --build"
   },
   "author": "Chase William Roth",
