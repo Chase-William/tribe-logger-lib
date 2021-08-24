@@ -7,7 +7,7 @@
 /*
   This path must be a valid relative path from the calling main.js executing dir to the binding native addon
 */
-const myModule = require("../vendor/binding");
+const myModule = require("../vendor/tribe-logger-lib/build/Release/binding");
 
 export enum WinImgGetError {
   Success = 0,
