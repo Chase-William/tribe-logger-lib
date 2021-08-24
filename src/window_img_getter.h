@@ -8,11 +8,6 @@
 #include <Windows.h>
 #include "error.h"
 
-// struct BitmapReturn {
-//   char* bitmap;
-//   int* err;
-// };
-
 /*
   Gets a bitmap buffer from a specific window.
   Param - srcWindowName, name of window to find and get bitmap from

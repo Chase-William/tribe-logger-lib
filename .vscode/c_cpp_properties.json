@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${vcpkgRoot}/x64-windows/include",
-                "C:\\Users\\Chase Roth\\AppData\\Local\\node-gyp\\Cache\\14.16.0\\include\\node"
+                "C:\\Users\\Chase Roth\\AppData\\Local\\node-gyp\\Cache\\14.16.0\\include\\node",
+                "node_modules/nan"
             ],
             "defines": [
                 "_DEBUG",

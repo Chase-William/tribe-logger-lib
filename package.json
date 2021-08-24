@@ -1,24 +1,19 @@
 {
-  "name": "addon",
+  "name": "test-native-node",
   "version": "1.0.0",
-  "description": "Native module calculating estimate of PI",
+  "description": "Testing native node addons for my other more complex library.",
+  "main": "index.js",
   "scripts": {
-    "init": "npm install && npm run build:dev",
-    "build:dev": "cmake-js compile && tsc --build",
-    "config": "cmake-js reconfigure"
+    "build": "node-gyp rebuild --target=13.1.9 --arch=x64 --dist-url=https://electronjs.org/headers && tsc --build"
+  },
+  "author": "Chase William Roth",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.7.1",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "bindings": "^1.5.0",
-    "cmake-js": "^6.2.1",
-    "nan": "^2.14.2"
-  },
-  "devDependencies": {
-    "@types/node": "^16.4.10",
-    "typescript": "^4.3.5"
-  },
-  "cmake-js": {
-    "runtime": "electron",
-    "runtimeVersion": "13.1.9",
-    "arch": "x64"
+    "nan": "^2.15.0"
   }
 }

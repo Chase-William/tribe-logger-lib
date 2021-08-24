@@ -1,11 +1,13 @@
 /*
   Authored by Chase Roth 7/30/2021
   See repository root directory for more information.
-
   Type-Script front end for using this API.
 */
 
-var myModule = require("bindings")("addon");
+/*
+  This path must be a valid relative path from the calling main.js executing dir to the binding native addon
+*/
+const myModule = require("../vendor/binding");
 
 export enum WinImgGetError {
   Success = 0,
