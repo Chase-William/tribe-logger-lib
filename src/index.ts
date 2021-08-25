@@ -30,6 +30,10 @@ export module WindowImgetter {
     return myModule.TestMethod();
   }
 
+  export function SetupTesseractTESSDATA_PREFIX(path: string) {
+    myModule.SetTESSDATA_PREFIX(path);
+  }
+
   export class BitmapResult {
     ErrorCode: WinImgGetError;
     BitmapBuffer: ArrayBuffer;

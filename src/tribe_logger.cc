@@ -7,10 +7,10 @@
 #include <iostream>
 #include "tribe_logger.h"
 #include "window_img_getter.h"
+#include "env.h"
 // Tesseract OCR headers
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
-
 
 WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int top, int right, int bottom) {
   unsigned long size;
@@ -26,7 +26,8 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int 
 
   tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
   // Init with English, without lang specification
-  if (api->Init(NULL, "eng")) {
+  std::cout << "TESSDATA_PREFIX: " << *TESSDATA_PREFIX << std::endl;
+  if (api->Init(TESSDATA_PREFIX, "eng")) {
     fprintf(stderr, "Could not initialize tesseract.\n");
     *err = WinImgGetError::TesseractInitializationFailure;
     return r;
