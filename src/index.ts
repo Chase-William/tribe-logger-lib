@@ -22,8 +22,8 @@ export module WindowImgetter {
     return myModule.GetWindowBitmap(windowName);
   }
   
-  export function TryGetTribeLogText(windowName: string, left: Number, top: Number, right: Number, bottom: Number): TribeLog {
-    return myModule.TryGetTribeLogText(windowName, left, top, right, bottom);
+  export function TryGetTribeLogText(windowName: string, tessDataPath: string, left: Number, top: Number, right: Number, bottom: Number): TribeLog {
+    return myModule.TryGetTribeLogText(windowName, tessDataPath, left, top, right, bottom);
   }
 
   export function TestMethod(): string {
