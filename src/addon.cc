@@ -5,15 +5,17 @@
 #include <iostream>
 
 NAN_METHOD(SetTESSDATA_PREFIX) {
-  std::cout << "Setting TESSDATA_PREFIX\n";
+  std::cout << "Setting TESSDATA_PREFIX 1\n";
   Nan::Utf8String value(Nan::To<v8::String>(info[0]).ToLocalChecked());
   // malloc(value.length() * sizeof(char));
-  // TESSDATA_PREFIX = (const char*)malloc(value.length() * sizeof(char));
-  // std::memcpy(&TESSDATA_PREFIX, value.operator*(), value.length() * sizeof(char));
-  // std::cout << TESSDATA_PREFIX << std::endl;
-
+  std::cout << "Setting TESSDATA_PREFIX 2\n";
+  TESSDATA_PREFIX = (char*)malloc(value.length() * sizeof(int));
+  std::cout << "Setting TESSDATA_PREFIX 3\n";
+  std::memcpy(&TESSDATA_PREFIX, value.operator*(), value.length() * sizeof(int));
+  std::cout << "Setting TESSDATA_PREFIX 4\n";
+  std::cout << &TESSDATA_PREFIX << std::endl;
+  
   /*
-
     We need our TESS api to load in the correct path for the tessdata/eng.eng.traineddata file.
     Using enviroment variables or by calling a initialize function giving a path or something....
   */

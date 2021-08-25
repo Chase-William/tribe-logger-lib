@@ -13,6 +13,7 @@
 */
 WinImgTextRtrn InternalTryGetTribeLogText(
   std::string windowName, 
+  std::string tessData,
   int left, 
   int top, 
   int right, 

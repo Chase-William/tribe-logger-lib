@@ -55,20 +55,21 @@ NAN_METHOD(GetWindowBitmap) {
 
 NAN_METHOD(TryGetTribeLogText) {
   Nan::MaybeLocal<v8::String> v8WindowName = Nan::To<v8::String>(info[0]);
-  Nan::MaybeLocal<v8::Integer> v8left = Nan::To<v8::Integer>(info[1]);
-  Nan::MaybeLocal<v8::Integer> v8top = Nan::To<v8::Integer>(info[2]);
-  Nan::MaybeLocal<v8::Integer> v8right = Nan::To<v8::Integer>(info[3]);
-  Nan::MaybeLocal<v8::Integer> v8bottom = Nan::To<v8::Integer>(info[4]);
+  Nan::MaybeLocal<v8::String> v8tessData = Nan::To<v8::String>(info[1]);
+  Nan::MaybeLocal<v8::Integer> v8left = Nan::To<v8::Integer>(info[2]);
+  Nan::MaybeLocal<v8::Integer> v8top = Nan::To<v8::Integer>(info[3]);
+  Nan::MaybeLocal<v8::Integer> v8right = Nan::To<v8::Integer>(info[4]);
+  Nan::MaybeLocal<v8::Integer> v8bottom = Nan::To<v8::Integer>(info[5]);
 
-  v8::Local<v8::String> str = v8WindowName.ToLocalChecked(); // Nan::MaybeLocal<v8:String> to std::string conversion
-  std::string windowName = std::string(Nan::Utf8String(str).operator*());
+  std::string windowName = std::string(Nan::Utf8String(v8WindowName.ToLocalChecked()).operator*());
+  std::string tessDataPath = std::string(Nan::Utf8String(v8tessData.ToLocalChecked()).operator*());
 
   int left = (int)v8left.ToLocalChecked().operator*()->Value();
   int top = (int)v8top.ToLocalChecked().operator*()->Value();
   int right = (int)v8right.ToLocalChecked().operator*()->Value();
   int bottom = (int)v8bottom.ToLocalChecked().operator*()->Value();
   // Get tuple from native function contianing a possible errCode & the data
-  WinImgTextRtrn result = InternalTryGetTribeLogText(windowName, left, top, right, bottom);
+  WinImgTextRtrn result = InternalTryGetTribeLogText(windowName, tessDataPath, left, top, right, bottom);
   int* err = std::get<0>(result);
   const char* logText = std::get<1>(result);
  

@@ -1,3 +1,3 @@
 #pragma once
 
-static const char* TESSDATA_PREFIX = 0;
+static char* TESSDATA_PREFIX;

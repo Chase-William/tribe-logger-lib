@@ -12,7 +12,7 @@
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 
-WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int top, int right, int bottom) {
+WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string tessData, int left, int top, int right, int bottom) {
   unsigned long size;
 
   WinImgRtrn r = GetNativeWindowBitmap(windowName, size);
@@ -26,8 +26,8 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, int left, int 
 
   tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
   // Init with English, without lang specification
-  std::cout << "TESSDATA_PREFIX: " << *TESSDATA_PREFIX << std::endl;
-  if (api->Init(TESSDATA_PREFIX, "eng")) {
+  std::cout << "TESSDATA: " << tessData << std::endl;
+  if (api->Init(tessData.c_str(), "eng")) {
     fprintf(stderr, "Could not initialize tesseract.\n");
     *err = WinImgGetError::TesseractInitializationFailure;
     return r;
