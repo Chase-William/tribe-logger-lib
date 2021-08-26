@@ -25,7 +25,8 @@ NAN_METHOD(GetWindowBitmap) {
   // Get underlying char* from Nan string
   const char* ptr =  windowName.operator*();
   unsigned long size;
-  bool includeFileHeader = (bool)v8IncludeFileHeader.operator*();
+  bool includeFileHeader = v8IncludeFileHeader.operator*()->Value();
+
   std::cout << includeFileHeader << std::endl;
   // Call our custom API for polling a bitmap from a target window
   WinImgRtrn result = GetNativeWindowBitmap(ptr, size, includeFileHeader);

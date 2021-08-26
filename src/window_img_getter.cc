@@ -90,10 +90,11 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bo
     dwSizeofDIB = dwBmpSize + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     size = dwSizeofDIB;  
     // Offset to where the actual bmpBuffer bits start.
-    bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
+    bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);    
+    bmpBuffer = (char*)malloc(dwSizeofDIB);
+
     // Get offset in bytes from file start
     DWORD pixelOffset = dwSizeofDIB - dwBmpSize;
-    bmpBuffer = (char*)malloc(dwSizeofDIB);
     // Set pixel buffer pointer based on offset
     lpPixels = bmpBuffer + pixelOffset;
     std::cout << "Sizeof-BITMAPFILEHEADER: " << sizeof(BITMAPFILEHEADER) << std::endl;
@@ -120,8 +121,8 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bo
     std::memcpy(bmpBuffer +  sizeof(bmfHeader), &bi, sizeof(bi));
   } else { // Get bitmap buffer without 54 byte header info
     dwBmpSize = ((bmpObj.bmWidth * 32 + 31) / 32) * 4 * bmpObj.bmHeight;
-    size = dwSizeofDIB;
-    bmpBuffer = (char*)malloc(dwSizeofDIB);
+    size = dwBmpSize;
+    bmpBuffer = (char*)malloc(dwBmpSize);
     BITMAPINFOHEADER bi;
     GetDIBits(
       hdcTarget, 
