@@ -18,8 +18,8 @@ export enum WinImgGetError {
 };
 
 export module WindowImgetter {
-  export function GetWindowBitmap(windowName: string): BitmapResult {
-    return myModule.GetWindowBitmap(windowName);
+  export function GetWindowBitmap(windowName: string, includeFileHeader: boolean): BitmapResult {
+    return myModule.GetWindowBitmap(windowName, includeFileHeader);
   }
   
   export function TryGetTribeLogText(windowName: string, tessDataPath: string, left: Number, top: Number, right: Number, bottom: Number): TribeLog {

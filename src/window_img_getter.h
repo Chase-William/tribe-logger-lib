@@ -14,7 +14,7 @@
   Param - size, size of the bitmap buffer being returned
   Return, pointer to the head of the bitmap buffer
 */
-WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size);
+WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bool includeFileHeader);
 
 /*
   Finalizer callback for releasing unmanaged resources.

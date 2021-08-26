@@ -19,16 +19,16 @@ NAN_METHOD(TestMethod) {
 
 // Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
-  Nan::MaybeLocal<v8::String> v8WindowName = Nan::To<v8::String>(info[0]);
-  // Get non-null string, otherwise crash
-  v8::Local<v8::String> str = v8WindowName.ToLocalChecked();
-  // Start conversion to C++ types
-  Nan::Utf8String value(str);
+  Nan::Utf8String windowName(Nan::To<v8::String>(info[0]).ToLocalChecked());
+  v8::Local<v8::Boolean> v8IncludeFileHeader = Nan::To<v8::Boolean>(info[1]).ToLocalChecked();
+
   // Get underlying char* from Nan string
-  const char* ptr =  value.operator*();
+  const char* ptr =  windowName.operator*();
   unsigned long size;
+  bool includeFileHeader = (bool)v8IncludeFileHeader.operator*();
+  std::cout << includeFileHeader << std::endl;
   // Call our custom API for polling a bitmap from a target window
-  WinImgRtrn result = GetNativeWindowBitmap(ptr, size);
+  WinImgRtrn result = GetNativeWindowBitmap(ptr, size, includeFileHeader);
   std::cout << "GetNativeWindowBitmap return\n"; 
   int* err = std::get<0>(result);
   char* buffer = std::get<1>(result);

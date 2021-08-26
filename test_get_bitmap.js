@@ -1,7 +1,7 @@
 const { WindowImgetter, WinImgGetError } = require('./dist/index');
 const fs = require('fs');
 
-const bitmapResult = WindowImgetter.GetWindowBitmap("ARK: Survival Evolved");
+const bitmapResult = WindowImgetter.GetWindowBitmap("ARK: Survival Evolved", true);
 
 console.log("ErrorCode: " + bitmapResult.ErrorCode);
 

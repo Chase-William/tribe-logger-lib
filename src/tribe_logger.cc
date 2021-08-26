@@ -15,7 +15,7 @@
 WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string tessData, int left, int top, int right, int bottom) {
   unsigned long size;
 
-  WinImgRtrn r = GetNativeWindowBitmap(windowName, size);
+  WinImgRtrn r = GetNativeWindowBitmap(windowName, size, true);
 
   int* err = std::get<0>(r);
   if (*err != WinImgGetError::Success) // Return error right away without further execution
