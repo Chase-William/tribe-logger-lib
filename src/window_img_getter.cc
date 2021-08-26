@@ -129,7 +129,7 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bo
       hbmpTarget, 
       0,
       (UINT)bmpObj.bmHeight,
-      lpPixels,
+      bmpBuffer,
       (BITMAPINFO*)&bi, // ----------------------------- check this if fails
       DIB_RGB_COLORS
     );
