@@ -43,7 +43,7 @@ NAN_METHOD(GetWindowBitmap) {
   v8::Local<v8::Number> errorValue = Nan::New(err == NULL ? 0 : *err);
   delete err; // cleanup bc we are passing by value to v8 so this can be deleted
   v8::Local<v8::String> bufferName = Nan::New("BitmapBuffer").ToLocalChecked();
-  v8::Local<v8::Object> bufferValue = Nan::NewBuffer(buffer, (uint32_t)size).ToLocalChecked();
+  v8::Local<v8::Object> bufferValue = Nan::NewBuffer(buffer, (uint32_t)size, DisposeNativeBitmap, NULL).ToLocalChecked();
   
   // Apply properties
   Nan::Set(jsObj, errorName, errorValue);
@@ -75,7 +75,7 @@ NAN_METHOD(TryGetTribeLogText) {
  
   v8::Local<v8::Object> jsObj = Nan::New<v8::Object>();
   v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
-  v8::Local<v8::Number> errorValue = Nan::New(err == NULL ? 0 : *err);
+  v8::Local<v8::Number> errorValue = Nan::New(*err);
   delete err;
   v8::Local<v8::String> logTextName = Nan::New("TribeLogText").ToLocalChecked();
   v8::Local<v8::String> logTextValue = Nan::New(logText).ToLocalChecked();  

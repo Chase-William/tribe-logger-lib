@@ -108,8 +108,6 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size) {
   // Finish filling out buffer of entire bmpBuffer
   std::memcpy(bmpBuffer, &bmfHeader, sizeof(bmfHeader));
   std::memcpy(bmpBuffer +  sizeof(bmfHeader), &bi, sizeof(bi));
-  // Output
-  // std::cout << "bmpBuffer: " << &bmpBuffer << std::endl;
 
 done:
   if (hbmpTarget) {
@@ -119,14 +117,6 @@ done:
   }  
   ReleaseDC(NULL, hdcTarget); // Cleanup hdc target
   ReleaseDC(hwndSrc, hdcSrcWindow); // Cleanup hdc from the source window handle
-  std::cout << "Before err check\n";
-  // if (*err != WinImgGetError::Success) {
-  //   std::cout << "before delete\n";
-  //   delete bmpBuffer;
-  //   std::cout << "after delete\n";
-  //   bmpBuffer = nullptr;
-  // }
-  std::cout << "Before return\n";
   return WinImgRtrn(err, bmpBuffer);
 }
 
