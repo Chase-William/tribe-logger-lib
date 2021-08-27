@@ -1,7 +1,6 @@
 #pragma once
 #include <nan.h>
 #include "sync.h" // Contains our functions
-#include "env.h"
 #include <iostream>
 
 void Initialize(v8::Local<v8::Object> exports) {

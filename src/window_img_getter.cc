@@ -84,27 +84,17 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bo
   // aligning bits for words?
   dwBmpSize = ((bmpObj.bmWidth * bi.biBitCount + 31) / 32) * 4 * bmpObj.bmHeight;
   // Add the size of the headers to the size of the bmpBuffer to get the total file size.
-  if (includeFileHeader) {
+  if (includeFileHeader) { // Include the header into the needed buff size if needed
     dwSizeofDIB = dwBmpSize + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     size = dwSizeofDIB;
   } else {
     size = dwBmpSize;  
   }  
     
-  char* bmpBuffer = (char*)malloc(dwSizeofDIB);
+  // Allocate bitmap buffer
+  char* bmpBuffer = (char*)malloc(size);
 
-  /*
-
-    IMPORTANT READ ---------------------------------
-
-
-    So the issue was that when calling GetDIBits you need a BITMAPINFO structure that contains meta data to be passed in with...
-    Should this be two seperate methods?
-    Figure out a better implementation that is clearer...
-  */
-
-
-  if (includeFileHeader) {
+  if (includeFileHeader) { // Calc offset if including the header
     // Offset to where the actual bmpBuffer bits start.
     bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);  
     // Get offset in bytes from file start

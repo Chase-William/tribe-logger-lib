@@ -7,7 +7,6 @@
 #include <iostream>
 #include "tribe_logger.h"
 #include "window_img_getter.h"
-#include "env.h"
 // Tesseract OCR headers
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
