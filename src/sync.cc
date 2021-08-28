@@ -27,17 +27,14 @@ NAN_METHOD(GetWindowBitmap) {
   unsigned long size;
   bool includeFileHeader = v8IncludeFileHeader.operator*()->Value();
 
-  std::cout << includeFileHeader << std::endl;
   // Call our custom API for polling a bitmap from a target window
   WinImgRtrn result = GetNativeWindowBitmap(ptr, size, includeFileHeader);
-  std::cout << "GetNativeWindowBitmap return\n"; 
+
   int* err = std::get<0>(result);
   char* buffer = std::get<1>(result);
 
   // Create generic JS object to append to
   v8::Local<v8::Object> jsObj = Nan::New<v8::Object>();
-
-  std::cout << "Buffer: " << &buffer << std::endl;
 
   // Create propNames and values
   v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();

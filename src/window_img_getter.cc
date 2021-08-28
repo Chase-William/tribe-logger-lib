@@ -14,14 +14,13 @@ const float INCH_TO_METER_RATIO = 39.3701f;
 WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bool includeFileHeader) {
   HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
 
-  std::cout << includeFileHeader << std::endl;
-
-  int* err = new int(WinImgGetError::Success); // Error Pointer  
+  int* err = new int(WinImgGetError::Success); // Error variable  
   size = 0; // Initialize size otherwise unitialized memory is use and has undefined behavior
   HDC hdcSrcWindow = GetDC(hwndSrc); // Source window device-context handle
   HDC hdcTarget = CreateCompatibleDC(NULL); // Get in-memory DC, not connected to a device
   HBITMAP hbmpTarget; // Handle to target bmpBuffer
-  BITMAP bmpObj; // Actual Bitmap object from GetObject()  
+  BITMAP bmpObj; // Actual Bitmap object from GetObject() 
+  char* bmpBuffer = NULL; 
   if (!hwndSrc) {
     err = new int(WinImgGetError::FailedToFindWindow);
     goto done;
@@ -92,7 +91,7 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bo
   }  
     
   // Allocate bitmap buffer
-  char* bmpBuffer = (char*)malloc(size);
+  bmpBuffer = (char*)malloc(size);
 
   if (includeFileHeader) { // Calc offset if including the header
     // Offset to where the actual bmpBuffer bits start.
@@ -103,10 +102,8 @@ WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bo
     lpPixels = bmpBuffer + pixelOffset;
   } else {
     lpPixels = bmpBuffer;
-  }  
-  // std::cout << "Sizeof-BITMAPFILEHEADER: " << sizeof(BITMAPFILEHEADER) << std::endl;
-  // std::cout << "Sizeof-BITMAPINFOHEADER: " << sizeof(BITMAPINFOHEADER) << std::endl;
-  // std::cout << "Offset-pixelOffset: " << pixelOffset << std::endl;
+  }
+  
   // Gets the "bits" from the bmpBuffer, and copies them into a buffer 
   // that's pointed to by lpPixels.
   GetDIBits(

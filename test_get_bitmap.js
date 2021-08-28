@@ -3,16 +3,26 @@ const fs = require('fs');
 
 const bitmapResult = WindowImgetter.GetWindowBitmap("ARK: Survival Evolved", true);
 
-console.log("ErrorCode: " + bitmapResult.ErrorCode);
+switch (bitmapResult.ErrorCode) {
+  case WinImgGetError.Success:
+    const view = new Uint8Array(bitmapResult.BitmapBuffer);
+    // console.log(view);
 
-if (!bitmapResult.ErrorCode == WinImgGetError.Success) {
-  console.log("An issue occured and therefore the bitmap cannot be saved...");
-  return;
+    fs.writeFileSync('bitmapResult.bmp', view, (err) => {
+      if (err) return console.log(err);
+      console.log("Saved");
+    });
+    break;
+  case WinImgGetError.FailedToFindWindow:
+    console.log("FailedToFindWindow");
+    break;
+  case WinImgGetError.BitBlockTransferFailed:
+    console.log("BitBlockTransferFailed");
+    break;
+  case WinImgGetError.FailedToGetClientRect:
+    console.log("FailedToGetClientRect");
+    break;
+  case WinImgGetError.TesseractInitializationFailure:
+    console.log("TesseractInitializationFailure");
+    break;
 }
-const view = new Uint8Array(bitmapResult.BitmapBuffer);
-console.log(view);
-
-fs.writeFileSync('bitmapResult.bmp', view, (err) => {
-  if (err) return console.log(err);
-  console.log("Saved");
-});

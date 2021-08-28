@@ -15,31 +15,31 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string te
   unsigned long size;
 
   WinImgRtrn r = GetNativeWindowBitmap(windowName, size, true);
-
-  int* err = std::get<0>(r);
-  if (*err != WinImgGetError::Success) // Return error right away without further execution
-    return r;
   
+  int* err = std::get<0>(r);
   const l_uint8 *buf = (l_uint8*)std::get<1>(r);
-  const char *text;
+  const char *text = NULL;
+  if (*err != WinImgGetError::Success) {
+    text = (new std::string())->c_str();
+  } else {
+    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+    // Init with English, without lang specification
+    //std::cout << "TESSDATA: " << tessData << std::endl;
+    if (api->Init(tessData.c_str(), "eng")) {
+      fprintf(stderr, "Could not initialize tesseract.\n");
+      *err = WinImgGetError::TesseractInitializationFailure;
+      return r;
+    }
 
-  tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-  // Init with English, without lang specification
-  std::cout << "TESSDATA: " << tessData << std::endl;
-  if (api->Init(tessData.c_str(), "eng")) {
-    fprintf(stderr, "Could not initialize tesseract.\n");
-    *err = WinImgGetError::TesseractInitializationFailure;
-    return r;
+    api->SetRectangle(left, top, right - left, bottom - top);
+    Pix *img = pixReadMemBmp(buf, size);
+    api->SetImage(img);
+    text = api->GetUTF8Text();
+
+    api->End();
+    delete api; // Cleanup tesseract api
+    pixDestroy(&img); // Cleanup leptonic bitmap type for tesseract
   }
-
-  api->SetRectangle(left, top, right - left, bottom - top);
-  Pix *img = pixReadMemBmp(buf, size);
-  api->SetImage(img);
-  text = api->GetUTF8Text();
-
-  api->End();
-  delete api; // Cleanup tesseract api
-  pixDestroy(&img); // Cleanup leptonic bitmap type for tesseract
   delete buf; // Cleanup bitmap
 
   return WinImgTextRtrn(err, text); // Return text found
