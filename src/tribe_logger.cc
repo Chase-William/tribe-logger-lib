@@ -11,7 +11,7 @@
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 
-WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string tessData, int left, int top, int right, int bottom) {
+WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string tessData, int left, int top, int width, int height) {
   unsigned long size;
 
   WinImgRtrn r = GetNativeWindowBitmap(windowName, size, true);
@@ -31,7 +31,7 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string te
       return r;
     }
 
-    api->SetRectangle(left, top, right - left, bottom - top);
+    api->SetRectangle(left, top, width, height);
     Pix *img = pixReadMemBmp(buf, size);
     api->SetImage(img);
     text = api->GetUTF8Text();

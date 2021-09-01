@@ -7,31 +7,37 @@
 /*
   This path must be a valid relative path from the calling main.js executing dir to the binding native addon
 */
-const myModule = require("../build/Release/binding");
-
-export enum WinImgGetError {
-  Success = 0,
-  FailedToFindWindow = 1,
-  FailedToGetClientRect = 2,
-  BitBlockTransferFailed = 3,
-  TesseractInitializationFailure = 4
-};
+// const myModule = require("../build/Release/binding");
+const myModule = require("./binding");
 
 export module WindowImgetter {
+
+  export enum WinImgGetError {
+    Success = 0,
+    FailedToFindWindow = 1,
+    FailedToGetClientRect = 2,
+    BitBlockTransferFailed = 3,
+    TesseractInitializationFailure = 4
+  };
+  
+
+  export interface Area {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  }
+
   export function GetWindowBitmap(windowName: string, includeFileHeader: boolean): BitmapResult {
     return myModule.GetWindowBitmap(windowName, includeFileHeader);
-  }
-  
-  export function TryGetTribeLogText(windowName: string, tessDataPath: string, left: Number, top: Number, right: Number, bottom: Number): TribeLog {
-    return myModule.TryGetTribeLogText(windowName, tessDataPath, left, top, right, bottom);
+  }  
+
+  export function TryGetTribeLogText(windowName: string, tessDataPath: string, area: Area): TribeLog {   
+    return myModule.TryGetTribeLogText(windowName, tessDataPath, area.left, area.top, area.width, area.height);
   }
 
   export function TestMethod(): string {
     return myModule.TestMethod();
-  }
-
-  export function SetupTesseractTESSDATA_PREFIX(path: string) {
-    myModule.SetTESSDATA_PREFIX(path);
   }
 
   export class BitmapResult {
