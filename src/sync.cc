@@ -66,18 +66,18 @@ NAN_METHOD(TryGetTribeLogText) {
   Nan::MaybeLocal<v8::String> v8tessData = Nan::To<v8::String>(info[1]);
   Nan::MaybeLocal<v8::Integer> v8left = Nan::To<v8::Integer>(info[2]);
   Nan::MaybeLocal<v8::Integer> v8top = Nan::To<v8::Integer>(info[3]);
-  Nan::MaybeLocal<v8::Integer> v8right = Nan::To<v8::Integer>(info[4]);
-  Nan::MaybeLocal<v8::Integer> v8bottom = Nan::To<v8::Integer>(info[5]);
+  Nan::MaybeLocal<v8::Integer> v8width = Nan::To<v8::Integer>(info[4]);
+  Nan::MaybeLocal<v8::Integer> v8height = Nan::To<v8::Integer>(info[5]);
 
   std::string windowName = std::string(Nan::Utf8String(v8WindowName.ToLocalChecked()).operator*());
   std::string tessDataPath = std::string(Nan::Utf8String(v8tessData.ToLocalChecked()).operator*());
 
   int left = (int)v8left.ToLocalChecked().operator*()->Value();
   int top = (int)v8top.ToLocalChecked().operator*()->Value();
-  int right = (int)v8right.ToLocalChecked().operator*()->Value();
-  int bottom = (int)v8bottom.ToLocalChecked().operator*()->Value();
+  int width = (int)v8width.ToLocalChecked().operator*()->Value();
+  int height = (int)v8height.ToLocalChecked().operator*()->Value();
   // Get tuple from native function contianing a possible errCode & the data
-  TribeLogResult r = InternalTryGetTribeLogText(windowName, tessDataPath, left, top, right, bottom);
+  TribeLogResult r = InternalTryGetTribeLogText(windowName, tessDataPath, left, top, width, height);
 
   int* err = r.ErrorCode;
  
