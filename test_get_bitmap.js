@@ -1,10 +1,11 @@
-const { WindowImgetter, WinImgGetError } = require('./dist/index');
+const { WindowImagetter } = require('./dist/index');
 const fs = require('fs');
 
-const bitmapResult = WindowImgetter.GetWindowBitmap("ARK: Survival Evolved", true);
+console.log("Calling native node addon api for a bitmap from the specified window...");
+const bitmapResult = WindowImagetter.GetWindowBitmap("ARK: Survival Evolved", true);
 
 switch (bitmapResult.ErrorCode) {
-  case WinImgGetError.Success:
+  case WindowImagetter.WinImgGetError.Success:
     const view = new Uint8Array(bitmapResult.BitmapBuffer);
     // console.log(view);
 
@@ -13,16 +14,19 @@ switch (bitmapResult.ErrorCode) {
       console.log("Saved");
     });
     break;
-  case WinImgGetError.FailedToFindWindow:
+  case WindowImagetter.WinImgGetError.FailedToFindWindow:
     console.log("FailedToFindWindow");
     break;
-  case WinImgGetError.BitBlockTransferFailed:
+  case WindowImagetter.WinImgGetError.BitBlockTransferFailed:
     console.log("BitBlockTransferFailed");
     break;
-  case WinImgGetError.FailedToGetClientRect:
+  case WindowImagetter.WinImgGetError.FailedToGetClientRect:
     console.log("FailedToGetClientRect");
     break;
-  case WinImgGetError.TesseractInitializationFailure:
+  case WindowImagetter.WinImgGetError.TesseractInitializationFailure:
     console.log("TesseractInitializationFailure");
+    break;
+  default:
+    console.log("Something went wrong, the default switch should never be triggered...");
     break;
 }

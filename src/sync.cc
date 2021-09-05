@@ -13,10 +13,6 @@
 #include "window_img_getter.h"
 #include "tribe_logger.h"
 
-NAN_METHOD(TestMethod) {
-  info.GetReturnValue().Set(Nan::New("Was able to retrieve a value (string) from the C++ back-end.").ToLocalChecked());
-}
-
 // Fetch a single bitmap
 NAN_METHOD(GetWindowBitmap) {
   Nan::Utf8String windowName(Nan::To<v8::String>(info[0]).ToLocalChecked());
@@ -24,14 +20,20 @@ NAN_METHOD(GetWindowBitmap) {
 
   // Get underlying char* from Nan string
   const char* ptr =  windowName.operator*();
-  unsigned long size;
   bool includeFileHeader = v8IncludeFileHeader.operator*()->Value();
 
   // Call our custom API for polling a bitmap from a target window
-  WinImgRtrn result = GetNativeWindowBitmap(ptr, size, includeFileHeader);
+  WindowBitmapResult r = GetNativeWindowBitmap(ptr, includeFileHeader);
 
-  int* err = std::get<0>(result);
-  char* buffer = std::get<1>(result);
+#if _DEBUG
+  std::cout << "ErrorCode: " << r.ErrorCode << std::endl;
+  std::cout << "BitmapBuffer Address: " << &(r.BitmapBuffer) << std::endl;
+  std::cout << "Size: " << r.Size << std::endl;
+  std::cout << "Width: " << r.Width << std::endl;
+  std::cout << "Height: " << r.Height << std::endl;
+#endif
+
+  int* err = r.ErrorCode;
 
   // Create generic JS object to append to
   v8::Local<v8::Object> jsObj = Nan::New<v8::Object>();
@@ -41,13 +43,21 @@ NAN_METHOD(GetWindowBitmap) {
   v8::Local<v8::Number> errorValue = Nan::New(err == NULL ? 0 : *err);
   delete err; // cleanup bc we are passing by value to v8 so this can be deleted
   v8::Local<v8::String> bufferName = Nan::New("BitmapBuffer").ToLocalChecked();
-  v8::Local<v8::Object> bufferValue = Nan::NewBuffer(buffer, (uint32_t)size, DisposeNativeBitmap, NULL).ToLocalChecked();
-  
-  // Apply properties
+  v8::Local<v8::Object> bufferValue = Nan::NewBuffer(r.BitmapBuffer, (uint32_t)r.Size, DisposeNativeBitmap, NULL).ToLocalChecked();
+  // Creat width js prop
+  v8::Local<v8::String> widthName = Nan::New("Width").ToLocalChecked();
+  v8::Local<v8::Number> widthValue = Nan::New(r.Width);
+  // Create height js prop
+  v8::Local<v8::String> heightName = Nan::New("Height").ToLocalChecked();
+  v8::Local<v8::Number> heightValue = Nan::New(r.Height);
+
+  // Apply props to js obj
   Nan::Set(jsObj, errorName, errorValue);
   Nan::Set(jsObj, bufferName, bufferValue);
+  Nan::Set(jsObj, widthName, widthValue);
+  Nan::Set(jsObj, heightName, heightValue);
 
-  // Set object as return type
+  // Set obj as return
   info.GetReturnValue().Set(jsObj);
 }
 
@@ -67,19 +77,24 @@ NAN_METHOD(TryGetTribeLogText) {
   int right = (int)v8right.ToLocalChecked().operator*()->Value();
   int bottom = (int)v8bottom.ToLocalChecked().operator*()->Value();
   // Get tuple from native function contianing a possible errCode & the data
-  WinImgTextRtrn result = InternalTryGetTribeLogText(windowName, tessDataPath, left, top, right, bottom);
-  int* err = std::get<0>(result);
-  const char* logText = std::get<1>(result);
+  TribeLogResult r = InternalTryGetTribeLogText(windowName, tessDataPath, left, top, right, bottom);
+
+  int* err = r.ErrorCode;
  
+  // Create js obj
   v8::Local<v8::Object> jsObj = Nan::New<v8::Object>();
+  // Create error prop
   v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
   v8::Local<v8::Number> errorValue = Nan::New(*err);
   delete err;
+  // Create tribeLogText prop
   v8::Local<v8::String> logTextName = Nan::New("TribeLogText").ToLocalChecked();
-  v8::Local<v8::String> logTextValue = Nan::New(logText).ToLocalChecked();  
+  v8::Local<v8::String> logTextValue = Nan::New(r.TribeLogText).ToLocalChecked();  
+
+  // Apply props to js obj
   Nan::Set(jsObj, errorName, errorValue);
   Nan::Set(jsObj, logTextName, logTextValue);
 
-  // Set object as return type
+  // Set object as return
   info.GetReturnValue().Set(jsObj);
 }

@@ -11,11 +11,11 @@
 
 const float INCH_TO_METER_RATIO = 39.3701f;
 
-WinImgRtrn GetNativeWindowBitmap(std::string windowName, unsigned long &size, bool includeFileHeader) {
+WindowBitmapResult GetNativeWindowBitmap(std::string windowName, bool includeFileHeader) {
   HWND hwndSrc = FindWindowA(NULL, windowName.c_str());
 
   int* err = new int(WinImgGetError::Success); // Error variable  
-  size = 0; // Initialize size otherwise unitialized memory is use and has undefined behavior
+  int size = 0; // Initialize size otherwise unitialized memory is use and has undefined behavior
   HDC hdcSrcWindow = GetDC(hwndSrc); // Source window device-context handle
   HDC hdcTarget = CreateCompatibleDC(NULL); // Get in-memory DC, not connected to a device
   HBITMAP hbmpTarget; // Handle to target bmpBuffer
@@ -134,7 +134,7 @@ done:
   }  
   ReleaseDC(NULL, hdcTarget); // Cleanup hdc target
   ReleaseDC(hwndSrc, hdcSrcWindow); // Cleanup hdc from the source window handle
-  return WinImgRtrn(err, bmpBuffer);
+  return WindowBitmapResult(err, bmpBuffer, size, width, height);
 }
 
 void DisposeNativeBitmap(char *data, void *hint) {

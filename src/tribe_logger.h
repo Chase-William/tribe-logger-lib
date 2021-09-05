@@ -11,11 +11,11 @@
   Gets the text inside a tribe log.
   Param - windowName, Name of window to use as a source
 */
-WinImgTextRtrn InternalTryGetTribeLogText(
+TribeLogResult InternalTryGetTribeLogText(
   std::string windowName, 
   std::string tessData,
   int left, 
   int top, 
-  int right, 
-  int bottom
+  int width, 
+  int height
 );

@@ -11,13 +11,12 @@
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 
-WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string tessData, int left, int top, int width, int height) {
-  unsigned long size;
+TribeLogResult InternalTryGetTribeLogText(std::string windowName, std::string tessData, int left, int top, int width, int height) {
 
-  WinImgRtrn r = GetNativeWindowBitmap(windowName, size, true);
+  WindowBitmapResult r = GetNativeWindowBitmap(windowName, true);
   
-  int* err = std::get<0>(r);
-  const l_uint8 *buf = (l_uint8*)std::get<1>(r);
+  int* err = r.ErrorCode;
+  const l_uint8 *buf = (l_uint8*)r.BitmapBuffer;
   const char *text = NULL;
   if (*err != WinImgGetError::Success) {
     text = (new std::string())->c_str();
@@ -28,11 +27,11 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string te
     if (api->Init(tessData.c_str(), "eng")) {
       fprintf(stderr, "Could not initialize tesseract.\n");
       *err = WinImgGetError::TesseractInitializationFailure;
-      return r;
+      return TribeLogResult(err, text);
     }
 
     api->SetRectangle(left, top, width, height);
-    Pix *img = pixReadMemBmp(buf, size);
+    Pix *img = pixReadMemBmp(buf, r.Size);
     api->SetImage(img);
     text = api->GetUTF8Text();
 
@@ -42,5 +41,5 @@ WinImgTextRtrn InternalTryGetTribeLogText(std::string windowName, std::string te
   }
   delete buf; // Cleanup bitmap
 
-  return WinImgTextRtrn(err, text); // Return text found
+  return TribeLogResult(err, text); // Return text found
 }

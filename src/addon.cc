@@ -8,8 +8,6 @@ void Initialize(v8::Local<v8::Object> exports) {
     Nan::GetFunction(Nan::New<v8::FunctionTemplate>(GetWindowBitmap)).ToLocalChecked());
   Nan::Set(exports, Nan::New<v8::String>("TryGetTribeLogText").ToLocalChecked(),
     Nan::GetFunction(Nan::New<v8::FunctionTemplate>(TryGetTribeLogText)).ToLocalChecked());
-  Nan::Set(exports, Nan::New<v8::String>("TestMethod").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<v8::FunctionTemplate>(TestMethod)).ToLocalChecked());
 }
 
 extern "C" NODE_MODULE_EXPORT void
