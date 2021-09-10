@@ -45,8 +45,8 @@ export module WindowImagetter {
   export class BitmapResult {
     ErrorCode: WinImgGetError;
     BitmapBuffer: ArrayBuffer;
-    Width: Number;
-    Height: Number;
+    Width: number;
+    Height: number;
   }
   
   export class TribeLogResult {
