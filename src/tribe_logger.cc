@@ -29,10 +29,12 @@ TribeLogResult InternalTryGetTribeLogText(std::string windowName, std::string te
       *err = WinImgGetError::TesseractInitializationFailure;
       return TribeLogResult(err, text);
     }
+    
+    std::cout << "Width: " << width;
 
-    api->SetRectangle(left, top, width, height);
     Pix *img = pixReadMemBmp(buf, r.Size);
     api->SetImage(img);
+    api->SetRectangle(left, top, width, height);
     text = api->GetUTF8Text();
 
     api->End();

@@ -4,7 +4,14 @@ process.env.TESSDATA_PREFIX = "C:\\Users\\Chase Roth\\Desktop\\tessdata";
 
 //WindowImgetter.SetupTesseractTESSDATA_PREFIX(__dirname + "../static/tessdata");
 
-const logs = WindowImagetter.TryGetTribeLogText("ARK: Survival Evolved", __dirname + "\\static\\tessdata", 0, 0, 640, 480);
+const area = {
+  left: 0,
+  top: 0,
+  width: 640,
+  height: 480
+};
+
+const logs = WindowImagetter.TryGetTribeLogText("ARK: Survival Evolved", __dirname + "\\static\\tessdata", area);
 
 switch (logs.ErrorCode) {
   case WindowImagetter.WinImgGetError.Success:
