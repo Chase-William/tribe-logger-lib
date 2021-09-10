@@ -4,10 +4,10 @@
 */
 
 #pragma once
-#include "window_img_getter.h"
 #include <iostream>
 #include <array>
 #include <stdio.h>
+#include "window_img_getter.h"
 
 const float INCH_TO_METER_RATIO = 39.3701f;
 

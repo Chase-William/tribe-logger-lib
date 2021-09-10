@@ -24,13 +24,10 @@ TribeLogResult InternalTryGetTribeLogText(std::string windowName, std::string te
     tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
     // Init with English, without lang specification
     //std::cout << "TESSDATA: " << tessData << std::endl;
-    if (api->Init(tessData.c_str(), "eng")) {
-      fprintf(stderr, "Could not initialize tesseract.\n");
+    if (api->Init(tessData.c_str(), "eng")) {      
       *err = WinImgGetError::TesseractInitializationFailure;
       return TribeLogResult(err, text);
     }
-    
-    std::cout << "Width: " << width;
 
     Pix *img = pixReadMemBmp(buf, r.Size);
     api->SetImage(img);

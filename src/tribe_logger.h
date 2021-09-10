@@ -5,7 +5,7 @@
 
 #pragma once
 #include <string>
-#include "error.h"
+#include "types.h"
 
 /*
   Gets the text inside a tribe log.

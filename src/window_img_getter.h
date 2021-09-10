@@ -6,7 +6,7 @@
 #pragma once
 #include <string>
 #include <Windows.h>
-#include "error.h"
+#include "types.h"
 
 /*
   Gets a bitmap buffer from a specific window.
