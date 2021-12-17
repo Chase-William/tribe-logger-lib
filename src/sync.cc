@@ -42,6 +42,7 @@ NAN_METHOD(GetWindowBitmap) {
   v8::Local<v8::String> errorName = Nan::New("ErrorCode").ToLocalChecked();
   v8::Local<v8::Number> errorValue = Nan::New(err == NULL ? 0 : *err);
   delete err; // cleanup bc we are passing by value to v8 so this can be deleted
+
   v8::Local<v8::String> bufferName = Nan::New("BitmapBuffer").ToLocalChecked();
   v8::Local<v8::Object> bufferValue = Nan::NewBuffer(r.BitmapBuffer, (uint32_t)r.Size, DisposeNativeBitmap, NULL).ToLocalChecked();
   // Creat width js prop

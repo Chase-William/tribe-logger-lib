@@ -4,6 +4,8 @@ const fs = require('fs');
 console.log("Calling native node addon api for a bitmap from the specified window...");
 const bitmapResult = WindowImagetter.GetWindowBitmap("ARK: Survival Evolved", true);
 
+// console.log(bitmapResult)
+
 switch (bitmapResult.ErrorCode) {
   case WindowImagetter.WinImgGetError.Success:
     const view = new Uint8Array(bitmapResult.BitmapBuffer);

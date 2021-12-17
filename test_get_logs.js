@@ -29,4 +29,7 @@ switch (logs.ErrorCode) {
   case WindowImagetter. WinImgGetError.TesseractInitializationFailure:
     console.log("TesseractInitializationFailure");
     break;
+  default:
+    console.log("Something went wrong, the default switch should never be triggered...");
+    break;
 }

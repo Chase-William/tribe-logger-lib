@@ -10,9 +10,9 @@
   -- Second for Electron
 */
 const myModule = require("../build/Release/binding");
-// const myModule = require("./binding");
+// const myModule = require("./binding.node");
 
-export module WindowImagetter {
+export namespace WindowImagetter {
 
   export enum WinImgGetError {
     Success = 0,
@@ -20,9 +20,8 @@ export module WindowImagetter {
     FailedToGetClientRect = 2,
     BitBlockTransferFailed = 3,
     TesseractInitializationFailure = 4
-  };
+  }
   
-
   export interface Area {
     left: number;
     top: number;
