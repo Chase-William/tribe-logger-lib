@@ -1,3 +1,7 @@
 dist/
 node_modules/
 build/
+.vs/
+
+package-lock.json
+yarn.lock
