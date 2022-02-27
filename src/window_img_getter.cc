@@ -22,6 +22,7 @@ WindowBitmapResult GetNativeWindowBitmap(std::string windowName, bool includeFil
   BITMAP bmpObj; // Actual Bitmap object from GetObject() 
   char* bmpBuffer = NULL; 
   if (!hwndSrc) {
+    delete err;
     err = new int(WinImgGetError::FailedToFindWindow);
     goto done;
   }   
@@ -33,6 +34,7 @@ WindowBitmapResult GetNativeWindowBitmap(std::string windowName, bool includeFil
 
   // Get dimensions of bmpBuffer from source window
   if (!GetClientRect(hwndSrc, &srcClientRect)) {
+    delete err;
     err = new int(WinImgGetError::FailedToGetClientRect);
     goto done;
   }
@@ -53,6 +55,7 @@ WindowBitmapResult GetNativeWindowBitmap(std::string windowName, bool includeFil
     0, 0,
     SRCCOPY // Operation type, copy & paste
   )) {
+    delete err;
     err = new int(WinImgGetError::BitBlockTransferFailed);
     goto done;
   }
